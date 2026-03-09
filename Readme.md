@@ -4,8 +4,7 @@
 
 ## Proje Hakkında
 
-![Ürün Tanıtım Görseli](Product.png)
-*(Not: Sunum aşamasında uygulamanın ekran görüntüsü Product.png adıyla eklenecektir.)*
+![Ürün Tanıtım Görseli](docs/Product.png)
 
 **Proje Tanımı:** > SolveIt, Süleyman Demirel Üniversitesi kampüs sınırları içerisinde ve Isparta şehir genelinde karşılaşılan teknik arızalar, çevre kirliliği veya altyapı sorunlarının yetkililere hızlıca iletilmesini sağlayan bütünleşik bir sorun bildirim platformudur. Öğrenciler ve vatandaşlar, karşılaştıkları problemleri tam konum ve kategori bilgisiyle birlikte sisteme kolayca kaydedebilirler. Geleneksel dilekçe veya mail yöntemlerinin aksine SolveIt, kullanıcılara tıpkı yemek siparişi uygulamalarındaki gibi anlık durum takibi ("Beklemede", "İnceleniyor", "Çözüldü") imkanı sunar. Platformun amacı, yetkililerin iş yükünü önem sırasına göre organize etmesini kolaylaştırırken, kullanıcıların da kendi bildirdikleri sorunların çözüldüğünden şeffaf bir şekilde emin olmalarını sağlamaktır.
 
