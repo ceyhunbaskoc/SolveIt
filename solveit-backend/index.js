@@ -1,29 +1,30 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-require('dotenv').config();
 
-const issueRoutes = require('./src/routes/issueRoutes');
+// Route imports
 const authRoutes = require('./src/routes/authRoutes');
+const issueRoutes = require('./src/routes/issueRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Middlewares
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Database Connection
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('[DB] MongoDB Connection Successful!'))
-    .catch((err) => console.error('[DB] MongoDB Connection Failed:', err.message));
+    .then(() => console.log('MongoDB Connected'))
+    .catch((err) => console.log('MongoDB Connection Failed: ', err));
 
-app.use('/api/issues', issueRoutes);
+// Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/issues', issueRoutes);
+app.use('/api/users', userRoutes);
 
-app.get('/', (req, res) => {
-    res.json({ message: 'UniFix API is running. Welcome, SoloStack!' });
-});
-
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`[SERVER] Running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

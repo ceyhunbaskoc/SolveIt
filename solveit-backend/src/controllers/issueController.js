@@ -79,3 +79,89 @@ exports.updateIssueStatus = async (req, res) => {
         });
     }
 };
+
+exports.getAllIssues = async (req, res) => {
+    try {
+        const query = {};
+        if (req.query.category) {
+            query.category = req.query.category;
+        }
+
+        const issues = await Issue.find(query).sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            count: issues.length,
+            data: issues
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+};
+
+exports.getMyIssues = async (req, res) => {
+    try {
+        const issues = await Issue.find({ reporterId: req.user.id }).sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            count: issues.length,
+            data: issues
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+};
+
+exports.getIssueById = async (req, res) => {
+    try {
+        const issue = await Issue.findById(req.params.id);
+
+        if (!issue) {
+            return res.status(404).json({ success: false, message: 'No issues were found for this ID.' });
+        }
+
+        res.status(200).json({ success: true, data: issue });
+    } catch (error) {
+        res.status(400).json({ success: false, message: 'iInvalid ID format.' });
+    }
+};
+
+exports.updateIssueStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const issue = await Issue.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { returnDocument: 'after', runValidators: true }
+        );
+
+        if (!issue) {
+            return res.status(404).json({ success: false, message: 'Issue not found' });
+        }
+
+        res.status(200).json({ success: true, data: issue });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+};
+
+// delete issue
+exports.deleteIssue = async (req, res) => {
+    try {
+        const issue = await Issue.findById(req.params.id);
+
+        if (!issue) {
+            return res.status(404).json({ success: false, message: 'Issue not found' });
+        }
+
+        if (issue.reporterId.toString() !== req.user.id) {
+            return res.status(403).json({ success: false, message: 'Not authorized to delete' });
+        }
+
+        await issue.deleteOne();
+        res.status(200).json({ success: true, data: {} });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+};

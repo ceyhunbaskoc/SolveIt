@@ -1,19 +1,24 @@
-const { protect, authorize } = require('../middleware/auth');
 const express = require('express');
-const router = express.Router();
 const { 
-    getAllIssues, 
     createIssue, 
-    updateIssueStatus 
+    getAllIssues, 
+    getIssueById, 
+    getMyIssues,
+    updateIssueStatus,
+    deleteIssue
 } = require('../controllers/issueController');
+const { protect } = require('../middleware/auth');
 
-// GET /api/issues
+const router = express.Router();
+
+// Public routes
 router.get('/', getAllIssues);
+router.get('/:id', getIssueById);
 
-// POST /api/issues
+// Protected routes
+router.get('/user/my-issues', protect, getMyIssues);
 router.post('/', protect, createIssue);
-
-// PATCH /api/issues/:id/status
-router.patch('/:id/status', protect, authorize('admin'), updateIssueStatus);
+router.patch('/:id/status', protect, updateIssueStatus);
+router.delete('/:id', protect, deleteIssue);
 
 module.exports = router;
