@@ -1,6 +1,6 @@
 # Web Frontend Görev Dağılımı ve Prensipleri
 
-**Web Frontend Adresi:** `http://localhost:3000` (Geliştirme Ortamı)
+**Web Frontend Adresi:** `frontend.yazmuh.com`
 
 Bu dokümanda, SolveIt web uygulamasının kullanıcı arayüzü (UI) ve kullanıcı deneyimi (UX) mimarisinin genel kuralları ve ekip görev dağılımı listelenmektedir.
 
@@ -16,30 +16,85 @@ Proje "Solo Developer" mimarisiyle ilerlediği için tüm frontend modüllerinde
 
 ## Genel Web Frontend Prensipleri
 
-UniFix projesinin web arayüzü geliştirilirken uyulması gereken temel standartlar aşağıdadır:
+### 1. Responsive Tasarım
+- **Mobile-First Approach:** Önce mobil tasarım, sonra desktop
+- **Breakpoints:** 
+  - Mobile: < 768px
+  - Tablet: 768px - 1024px
+  - Desktop: > 1024px
+- **Flexible Layouts:** CSS Grid ve Flexbox kullanımı
+- **Responsive Images:** srcset ve sizes attributes
+- **Touch-Friendly:** Minimum 44x44px touch targets
 
-### 1. Responsive Tasarım (Duyarlı Arayüz)
-- **Mobile-First Approach:** Önce mobil cihazlara uygun tasarım, ardından masaüstü (Desktop) genişletmesi yapılmalıdır.
-- **Flexible Layouts:** Tasarımda statik pikseller yerine CSS Grid ve Flexbox mantığı (Bootstrap 5 grid sistemi) kullanılmalıdır.
-- **Touch-Friendly:** Mobil tarayıcılarda rahat kullanım için tıklanabilir alanlar minimum 44x44px olmalıdır.
+### 2. Tasarım Sistemi
+- **CSS Framework:** Bootstrap, Tailwind CSS, Material-UI, veya custom
+- **Renk Paleti:** Tutarlı renk kullanımı (CSS variables)
+- **Tipografi:** Web-safe fonts veya web fonts (Google Fonts)
+- **Spacing:** Tutarlı padding ve margin değerleri (8px grid sistemi)
+- **Iconography:** Icon library (Font Awesome, Material Icons, Heroicons)
+- **Component Library:** Reusable UI components
 
-### 2. Tasarım Sistemi ve UI Bileşenleri
-- **CSS Framework:** Hızlı ve tutarlı bir arayüz için Bootstrap 5 tercih edilmiştir.
-- **Renk Paleti:** Sorunların durumunu belirten semantik renkler kullanılmalıdır (Örn: Beklemede -> Sarı/Warning, Çözüldü -> Yeşil/Success).
-- **Iconography:** Kullanıcı deneyimini artırmak için Font Awesome veya Bootstrap Icons kullanılmalıdır.
+### 3. Performans Optimizasyonu
+- **Code Splitting:** Route-based ve component-based splitting
+- **Lazy Loading:** Images, components, ve routes
+- **Minification:** CSS ve JavaScript minification
+- **Compression:** Gzip/Brotli compression
+- **Caching:** Browser caching, service worker (PWA)
+- **Bundle Size:** Tree shaking, dead code elimination
 
-### 3. API Entegrasyonu ve Veri Akışı
-- **HTTP Client:** Backend ile iletişim kurmak için native `Fetch API` veya `Axios` kullanılacaktır.
-- **Request Headers:** Kimlik doğrulaması gerektiren işlemlerde JWT Token, `Authorization: Bearer {token}` formatında gönderilmelidir.
-- **Asenkron Yapı:** API istekleri mutlaka `async/await` mimarisiyle ele alınmalı ve sayfa donmaları engellenmelidir.
+### 4. SEO (Search Engine Optimization)
+- **Meta Tags:** Title, description, keywords
+- **Structured Data:** JSON-LD schema markup
+- **Semantic HTML:** Proper HTML5 semantic elements
+- **Alt Text:** Image alt attributes
+- **Sitemap:** XML sitemap generation
+- **Robots.txt:** Search engine crawling rules
 
-### 4. Hata ve Durum Yönetimi (State Management)
-- **Loading States:** API'den veri beklenirken kullanıcılara mutlaka görsel bir geribildirim (Loading spinner veya skeleton ekran) sunulmalıdır.
-- **Error Handling:** Backend'den dönen 400 ve 500 serisi hatalar (Örn: "Şifre yanlış", "Zorunlu alan eksik"), kullanıcı dostu bildirimler (Alert/Toast) olarak ekrana yansıtılmalıdır.
+### 5. Erişilebilirlik (Accessibility)
+- **WCAG 2.1 AA Compliance:** Minimum accessibility standard
+- **Keyboard Navigation:** Tab order, focus management
+- **Screen Reader Support:** ARIA labels, roles, landmarks
+- **Color Contrast:** Minimum 4.5:1 ratio
+- **Focus Indicators:** Visible focus states
+- **Skip Links:** Skip to main content
 
-### 5. Tarayıcı İçi Depolama (Storage)
-- **Kimlik Yönetimi:** Başarılı giriş sonrası alınan JWT token güvenlik amacıyla `localStorage` veya `sessionStorage` içerisinde tutulmalıdır.
-- **Oturum Kapatma:** Kullanıcı çıkış yaptığında (Logout) depolanan token verisi tarayıcıdan temizlenmelidir.
+### 6. Browser Compatibility
+- **Modern Browsers:** Chrome, Firefox, Safari, Edge (son 2 versiyon)
+- **Polyfills:** ES6+ features için gerekli polyfills
+- **CSS Prefixes:** Autoprefixer kullanımı
+- **Feature Detection:** Modernizr veya native feature detection
+- **Graceful Degradation:** Eski tarayıcılar için fallback
 
-### 6. Form Doğrulama (Validation)
-- **Client-Side Validation:** Gereksiz sunucu yorgunluğunu önlemek için, e-posta formatı, boş alan kontrolü ve şifre uzunluğu gibi temel doğrulamalar HTML5 veya JavaScript ile arayüz tarafında (backend'e istek gitmeden önce) yapılmalıdır.
+### 7. State Management
+- **Global State:** Redux, Zustand, Context API (React), Vuex/Pinia (Vue)
+- **Local State:** Component state, hooks
+- **Server State:** React Query, SWR, Apollo Client
+- **Form State:** React Hook Form, Formik, React Final Form
+
+### 8. Routing
+- **Client-Side Routing:** React Router, Vue Router, Angular Router
+- **Deep Linking:** URL-based navigation
+- **Protected Routes:** Authentication guards
+- **404 Handling:** Custom 404 page
+- **History Management:** Browser history API
+
+### 9. API Entegrasyonu
+- **HTTP Client:** Axios, Fetch API, ky
+- **Request Interceptors:** Token injection, error handling
+- **Response Interceptors:** Error handling, token refresh
+- **Error Handling:** Centralized error handling
+- **Loading States:** Global loading indicator
+
+### 10. Testing
+- **Unit Tests:** Jest, Vitest, Mocha
+- **Integration Tests:** React Testing Library, Vue Test Utils
+- **E2E Tests:** Cypress, Playwright, Selenium
+- **Visual Regression:** Percy, Chromatic
+- **Accessibility Tests:** axe-core, Lighthouse
+
+### 11. Build ve Deployment
+- **Build Tool:** Webpack, Vite, Parcel, esbuild
+- **Module Bundler:** ES modules, CommonJS
+- **Environment Variables:** .env files
+- **CI/CD:** GitHub Actions, GitLab CI, Jenkins
+- **Hosting:** Vercel, Netlify, AWS, Azure

@@ -33,17 +33,29 @@ Bu dokümanda, mobil uygulamanın kullanıcı arayüzü (UI) ve kullanıcı dene
 - Content descriptions ve labels
 - Touch target boyutları (min 44x44dp/pt)
 - Screen reader desteği
+- Yüksek kontrast modu desteği
+- Font scaling desteği
 
 ### 5. Performans
 - Lazy loading (liste görünümleri için)
 - Image optimization ve caching
+- Smooth animations (60 FPS hedefi)
+- Memory management
 
 ### 6. Navigasyon
 - Tutarlı navigation pattern (bottom navigation, drawer, tabs)
 - Deep linking desteği
 - Back button handling
+- Navigation state yönetimi
 
 ### 7. Form Yönetimi
 - Real-time validation
 - Error mesajları alan altında gösterilmesi
 - Keyboard handling (dismiss, next field focus)
+- Form state persistence (opsiyonel)
+
+### 8. Platform Özellikleri
+- **Android:** Material Design 3 guidelines
+- **iOS:** Human Interface Guidelines
+- Platform-specific UI patterns kullanımı
+- Native feel sağlanması

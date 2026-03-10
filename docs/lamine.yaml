@@ -1,619 +1,434 @@
 openapi: 3.0.3
 info:
-  title: Mekan ve Yorum Yönetim API'si
+  title: SolveIt API
+  description: |
+    Süleyman Demirel Üniversitesi kampüsü ve Isparta şehri için geliştirilmiş sorun bildirim platformu RESTful API'si.
+    
+    ## Özellikler
+    - Kullanıcı Kimlik Doğrulama (JWT)
+    - Sorun Bildirimi ve Konum Takibi
+    - Statü Yönetimi (Beklemede, Çözüldü vb.)
+    - Kategori Bazlı Filtreleme
   version: 1.0.0
-  description: >
-    Bu API, mekanların ve bu mekanlara ait kullanıcı yorumlarının yönetilmesi için
-    tasarlanmış bir RESTful servistir. Temel CRUD (Create, Read, Update, Delete) işlemlerini
-    destekler. Mekanlar coğrafi koordinatlara göre sorgulanabilir ve her mekana kullanıcılar
-    tarafından yorum bırakılabilir. API, JWT tabanlı kimlik doğrulama ile korunmaktadır.
   contact:
-    name: Asım Sinan Yüksel
-    email: asimyuksel@sdu.edu.tr
+    name: Ceyhun Başkoç
+    email: support@solveit.com.tr
+    url: https://github.com/ceyhunbaskoc/solveit
 
 servers:
-  - url: https://api.vercel.com
-    description: Üretim sunucusu (Production)
-  - url: https://staging-api.vercel.com
-    description: Test sunucusu (Staging)
-  - url: https://localhost:3000
-    description: Yerel geliştirme sunucusu (Development)
+  - url: https://api.solveit.com.tr/v1
+    description: Canlı Sunucu (Production)
+  - url: https://staging.solveit.com.tr/api
+    description: Test Sunucusu (Staging)
+  - url: http://localhost:5000/api
 
 tags:
-  - name: Mekanlar
-    description: Mekan oluşturma, listeleme, güncelleme ve silme işlemleri
-  - name: Yorumlar
-    description: Mekanlara ait yorum oluşturma, görüntüleme, güncelleme ve silme işlemleri
-
-security:
-  - BearerAuth: []
+  - name: auth
+    description: Kimlik doğrulama ve kayıt işlemleri
+  - name: issues
+    description: Sorun bildirimleri ve listeleme işlemleri
+  - name: users
+    description: Kullanıcı profil işlemleri
 
 paths:
-  /api/venues:
+  /auth/register:
     post:
       tags:
-        - Mekanlar
-      summary: Mekan Ekle
-      operationId: addVenue
+        - auth
+      summary: Yeni kullanıcı kaydı
+      description: Sisteme yeni bir öğrenci veya vatandaş kaydeder.
+      operationId: registerUser
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VenueInput'
+              $ref: '#/components/schemas/UserRegistration'
       responses:
-        "201":
-          description: Mekan başarıyla oluşturuldu
+        '201':
+          description: Kullanıcı başarıyla oluşturuldu
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Venue'
-        "400":
-          description: Geçersiz istek verisi
+                $ref: '#/components/schemas/AuthToken'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Kullanıcı girişi
+      description: Email ve şifre ile giriş yapar, JWT token döner.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginCredentials'
+      responses:
+        '200':
+          description: Giriş başarılı
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "403":
-          description: Bu işlem için yetkiniz bulunmuyor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/AuthToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /issues:
     get:
       tags:
-        - Mekanlar
-      summary: Yakındaki Mekanları Listele
-      operationId: listNearbyVenues
+        - issues
+      summary: Tüm sorunları listele
+      description: Sistemdeki tüm aktif sorunları kronolojik olarak listeler. Kategoriye göre filtrelenebilir.
+      operationId: listIssues
       parameters:
-        - name: lat
+        - name: category
           in: query
-          required: true
-          description: Enlem değeri (latitude)
+          description: Kategoriye göre filtrele (Örn. Teknik, Temizlik)
           schema:
-            type: number
-            format: float
-          example: 37.7749
-        - name: long
-          in: query
-          required: true
-          description: Boylam değeri (longitude)
-          schema:
-            type: number
-            format: float
-          example: 35.3213
-        - name: page
-          in: query
-          required: false
-          description: Sayfa numarası (varsayılan 1)
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: limit
-          in: query
-          required: false
-          description: Sayfa başına sonuç sayısı (varsayılan 10, maksimum 50)
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 10
-          example: 10
+            type: string
       responses:
-        "200":
-          description: Yakındaki mekanlar başarıyla listelendi
+        '200':
+          description: Başarılı
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Venue'
-        "400":
-          description: Geçersiz koordinatlar
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/venues/{venueid}:
-    parameters:
-      - name: venueid
-        in: path
-        required: true
-        description: Mekanın benzersiz kimlik numarası
-        schema:
-          type: string
-        example: "abc123"
-
-    get:
+                  $ref: '#/components/schemas/Issue'
+    
+    post:
       tags:
-        - Mekanlar
-      summary: Mekan Getir
-      operationId: getVenue
-      responses:
-        "200":
-          description: Mekan başarıyla getirildi
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Venue'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Mekan bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    put:
-      tags:
-        - Mekanlar
-      summary: Mekan Güncelle
-      operationId: updateVenue
+        - issues
+      summary: Yeni sorun bildir
+      description: Kampüs veya şehirdeki bir sorunu konumuyla birlikte sisteme kaydeder.
+      operationId: createIssue
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VenueInput'
+              $ref: '#/components/schemas/IssueCreate'
       responses:
-        "200":
-          description: Mekan başarıyla güncellendi
+        '201':
+          description: Sorun başarıyla oluşturuldu
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Venue'
-        "400":
-          description: Geçersiz istek verisi
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "403":
-          description: Bu işlem için yetkiniz bulunmuyor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Mekan bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Issue'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
-    delete:
-      tags:
-        - Mekanlar
-      summary: Mekan Sil
-      operationId: deleteVenue
-      responses:
-        "204":
-          description: Mekan başarıyla silindi
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "403":
-          description: Bu işlem için yetkiniz bulunmuyor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Mekan bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/venues/{venueid}/comments:
-    parameters:
-      - name: venueid
-        in: path
-        required: true
-        description: Yorumun ait olduğu mekanın kimlik numarası
-        schema:
-          type: string
-        example: "abc123"
-
+  /issues/my-issues:
     get:
       tags:
-        - Yorumlar
-      summary: Yorumları Listele
-      operationId: listComments
-      parameters:
-        - name: page
-          in: query
-          required: false
-          description: Sayfa numarası (varsayılan 1)
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: limit
-          in: query
-          required: false
-          description: Sayfa başına sonuç sayısı (varsayılan 10, maksimum 50)
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 10
-          example: 10
+        - issues
+      summary: Kişisel bildirimleri getir
+      description: Giriş yapmış kullanıcının kendi açtığı sorun kayıtlarını listeler.
+      operationId: listMyIssues
+      security:
+        - bearerAuth: []
       responses:
-        "200":
-          description: Yorumlar başarıyla listelendi
+        '200':
+          description: Başarılı
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Comment'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Mekan bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                  $ref: '#/components/schemas/Issue'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
-    post:
-      tags:
-        - Yorumlar
-      summary: Yorum Ekle
-      operationId: addComment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CommentInput'
-      responses:
-        "201":
-          description: Yorum başarıyla oluşturuldu
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Comment'
-        "400":
-          description: Geçersiz istek verisi
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Mekan bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/venues/{venueid}/comments/{commentid}:
-    parameters:
-      - name: venueid
-        in: path
-        required: true
-        description: Yorumun ait olduğu mekanın kimlik numarası
-        schema:
-          type: string
-        example: "abc123"
-      - name: commentid
-        in: path
-        required: true
-        description: Yorumun benzersiz kimlik numarası
-        schema:
-          type: string
-        example: "cmt456"
-
+  /issues/{id}:
     get:
       tags:
-        - Yorumlar
-      summary: Yorum Getir
-      operationId: getComment
+        - issues
+      summary: Sorun detayını getir
+      description: Spesifik bir sorunun tüm detaylarını getirir.
+      operationId: getIssueById
+      parameters:
+        - $ref: '#/components/parameters/IssueIdParam'
       responses:
-        "200":
-          description: Yorum başarıyla getirildi
+        '200':
+          description: Başarılı
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Yorum bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    put:
-      tags:
-        - Yorumlar
-      summary: Yorum Güncelle
-      operationId: updateComment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CommentInput'
-      responses:
-        "200":
-          description: Yorum başarıyla güncellendi
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Comment'
-        "400":
-          description: Geçersiz istek verisi
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "403":
-          description: Bu işlem için yetkiniz bulunmuyor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Yorum bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Issue'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
     delete:
       tags:
-        - Yorumlar
-      summary: Yorum Sil
-      operationId: deleteComment
+        - issues
+      summary: Sorunu sil
+      description: Hatalı açılmış bir sorun kaydını siler.
+      operationId: deleteIssue
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IssueIdParam'
       responses:
-        "204":
-          description: Yorum başarıyla silindi
-        "401":
-          description: Kimlik doğrulama başarısız (token eksik veya geçersiz)
+        '204':
+          description: Sorun başarıyla silindi
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /issues/{id}/status:
+    patch:
+      tags:
+        - issues
+      summary: Sorun durumunu güncelle (Admin)
+      description: Yetkili kullanıcının sorunun çözüm durumunu güncellemesini sağlar.
+      operationId: updateIssueStatus
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IssueIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [PENDING, IN_PROGRESS, RESOLVED]
+      responses:
+        '200':
+          description: Durum başarıyla güncellendi
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        "403":
-          description: Bu işlem için yetkiniz bulunmuyor
+                $ref: '#/components/schemas/Issue'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /users/profile:
+    put:
+      tags:
+        - users
+      summary: Profil güncelle
+      description: Kullanıcının kendi profil bilgilerini güncellemesini sağlar.
+      operationId: updateProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Profil başarıyla güncellendi
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: Yorum bulunamadı
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
 components:
   securitySchemes:
-    BearerAuth:
-      type: apiKey
-      in: header
-      name: Authorization
-      description: 'JWT tabanlı kimlik doğrulama. İstek başlığına "Authorization: Bearer <token>" eklenmeli.'
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token ile kimlik doğrulama
+
+  parameters:
+    IssueIdParam:
+      name: id
+      in: path
+      required: true
+      description: Sorunun MongoDB ObjectID'si
+      schema:
+        type: string
 
   schemas:
-    Venue:
+    User:
       type: object
-      description: Mekan bilgilerini temsil eden model
       properties:
         _id:
           type: string
-          description: Mekanın benzersiz kimlik numarası (otomatik atanır)
-          example: "abc123"
+          description: Kullanıcı benzersiz kimliği (MongoDB)
         name:
           type: string
-          description: Mekan adı
-          example: "Kafe Mavi"
-        address:
+          example: "Ceyhun Başkoç"
+        email:
           type: string
-          description: Mekanın açık adresi
-          example: "Atatürk Cad. No:12, Ankara"
-        rating:
-          type: integer
-          description: Mekan puanı (1-5 arası)
-          minimum: 1
-          maximum: 5
-          example: 4
-        facilities:
-          type: array
-          description: Mekanda sunulan olanaklar
-          items:
-            type: string
-          example: ["Wi-Fi", "Otopark", "Canlı Müzik"]
-        coords:
-          type: object
-          description: Mekanın coğrafi koordinatları
-          properties:
-            lat:
-              type: number
-              format: float
-              description: Enlem değeri
-              example: 37.7749
-            long:
-              type: number
-              format: float
-              description: Boylam değeri
-              example: 35.3213
-          required:
-            - lat
-            - long
+          format: email
+          example: "ceyhun@solveit.com.tr"
+        role:
+          type: string
+          enum: [admin, user]
+          example: "user"
+        department:
+          type: string
+          example: "Bilgisayar Mühendisliği"
+
+    UserRegistration:
+      type: object
       required:
         - name
-        - address
-        - coords
-
-    VenueInput:
-      type: object
-      description: Mekan oluşturma veya güncelleme isteği için gönderilecek veri
+        - email
+        - password
       properties:
         name:
           type: string
-          description: Mekan adı
-          minLength: 2
-          maxLength: 100
-          example: "Kafe Mavi"
-        address:
+          example: "Ceyhun Başkoç"
+        email:
           type: string
-          description: Mekanın açık adresi
-          minLength: 5
-          example: "Atatürk Cad. No:12, Ankara"
-        rating:
-          type: integer
-          description: Mekan puanı (1-5 arası)
-          minimum: 1
-          maximum: 5
-          example: 4
-        facilities:
-          type: array
-          description: Mekanda sunulan olanaklar
-          items:
-            type: string
-          example: ["Wi-Fi", "Otopark"]
-        coords:
-          type: object
-          description: Mekanın coğrafi koordinatları
-          properties:
-            lat:
-              type: number
-              format: float
-              description: Enlem değeri
-              example: 37.7749
-            long:
-              type: number
-              format: float
-              description: Boylam değeri
-              example: 35.3213
-          required:
-            - lat
-            - long
-      required:
-        - name
-        - address
-        - coords
+          format: email
+          example: "ceyhun@solveit.com.tr"
+        password:
+          type: string
+          format: password
+          minLength: 6
+          example: "Guvenli123!"
 
-    Comment:
+    LoginCredentials:
       type: object
-      description: Yorum bilgilerini temsil eden model
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "ceyhun@solveit.com.tr"
+        password:
+          type: string
+          format: password
+          example: "Guvenli123!"
+
+    AuthToken:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        token:
+          type: string
+          description: JWT access token
+        role:
+          type: string
+          example: "user"
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Ceyhun Başkoç"
+        department:
+          type: string
+          example: "Yazılım Mühendisliği"
+
+    Issue:
+      type: object
       properties:
         _id:
           type: string
-          description: Yorumun benzersiz kimlik numarası (otomatik atanır)
-          example: "cmt456"
-        author:
+        title:
           type: string
-          description: Yorumu yazan kullanıcının adı
-          example: "Ahmet Yılmaz"
-        rating:
-          type: integer
-          description: Kullanıcının verdiği puan (1-5 arası)
-          minimum: 1
-          maximum: 5
-          example: 5
-        text:
+          example: "Kütüphane Priz Arızası"
+        description:
           type: string
-          description: Yorum metni
-          example: "Harika bir mekan, kesinlikle tavsiye ederim!"
-        createdOn:
+          example: "2. kat çalışma alanındaki prizler elektrik vermiyor."
+        category:
+          type: string
+          example: "Teknik"
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              example: 37.8322
+            longitude:
+              type: number
+              example: 30.5260
+        status:
+          type: string
+          enum: [PENDING, IN_PROGRESS, RESOLVED]
+          example: "PENDING"
+        reporterId:
+          type: string
+          description: Bildiren kullanıcının ID'si
+        createdAt:
           type: string
           format: date-time
-          description: Yorumun oluşturulma tarihi (ISO 8601 formatında)
-          example: "2026-02-20T14:30:00Z"
-      required:
-        - author
-        - rating
-        - text
 
-    CommentInput:
+    IssueCreate:
       type: object
-      description: Yorum oluşturma veya güncelleme isteği için gönderilecek veri
-      properties:
-        author:
-          type: string
-          description: Yorumu yazan kullanıcının adı
-          minLength: 2
-          maxLength: 50
-          example: "Ahmet Yılmaz"
-        rating:
-          type: integer
-          description: Kullanıcının verdiği puan (1-5 arası)
-          minimum: 1
-          maximum: 5
-          example: 5
-        text:
-          type: string
-          description: Yorum metni
-          minLength: 5
-          maxLength: 500
-          example: "Harika bir mekan, kesinlikle tavsiye ederim!"
       required:
-        - author
-        - rating
-        - text
+        - title
+        - description
+        - category
+      properties:
+        title:
+          type: string
+          example: "Kütüphane Priz Arızası"
+        description:
+          type: string
+          example: "2. kat çalışma alanındaki prizler elektrik vermiyor."
+        category:
+          type: string
+          example: "Teknik"
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              example: 37.8322
+            longitude:
+              type: number
+              example: 30.5260
 
     Error:
       type: object
-      description: Hata durumlarında döndürülen standart hata yanıtı
       properties:
+        success:
+          type: boolean
+          example: false
         message:
           type: string
-          description: Hatayı açıklayan mesaj
-          example: "Mekan bulunamadı"
-      required:
-        - message
+          example: "Hata detayı burada yer alır."
+
+  responses:
+    BadRequest:
+      description: Geçersiz istek
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Yetkisiz erişim (Token eksik veya geçersiz)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Kaynak bulunamadı
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Erişim reddedildi (Rol yetersiz)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

@@ -1,6 +1,6 @@
 # API Tasarımı - OpenAPI Specification
 
-**OpenAPI Spesifikasyon Dosyası:** [openapi.yaml](openapi.yaml)
+**OpenAPI Spesifikasyon Dosyası:** [lamine.yaml](lamine.yaml)
 
 Bu doküman, SolveIt (Kampüs ve Şehir Sorun Bildirim Sistemi) projesi için OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış API tasarımını içermektedir.
 
@@ -21,12 +21,15 @@ info:
   version: 1.0.0
   contact:
     name: Ceyhun Başkoç
-    email: ceyhun@sdu.edu.tr
+    email: support@solveit.com.tr
     url: https://github.com/ceyhunbaskoc/solveit
 
 servers:
+  - url: https://api.solveit.com.tr/v1
+    description: Canlı Sunucu (Production)
+  - url: https://staging.solveit.com.tr/api
+    description: Test Sunucusu (Staging)
   - url: http://localhost:5000/api
-    description: Yerel Geliştirme Sunucusu (Development)
 
 tags:
   - name: auth
@@ -276,7 +279,7 @@ components:
         email:
           type: string
           format: email
-          example: "ceyhun@sdu.edu.tr"
+          example: "ceyhun@solveit.com.tr"
         role:
           type: string
           enum: [admin, user]
@@ -298,7 +301,7 @@ components:
         email:
           type: string
           format: email
-          example: "ceyhun@sdu.edu.tr"
+          example: "ceyhun@solveit.com.tr"
         password:
           type: string
           format: password
@@ -314,7 +317,7 @@ components:
         email:
           type: string
           format: email
-          example: "ceyhun@sdu.edu.tr"
+          example: "ceyhun@solveit.com.tr"
         password:
           type: string
           format: password
