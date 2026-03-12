@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/axios';
 import toast from 'react-hot-toast';
+import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer } from 'recharts';
 
 const AdminDashboard = () => {
   const { user, isAuthenticated } = useAuth();
@@ -114,6 +115,41 @@ const AdminDashboard = () => {
     });
   };
 
+  // Grafik verilerini hesapla
+  const getStatusData = () => {
+    const statusCounts = {
+      'Beklemede': 0,
+      'İnceleniyor': 0,
+      'Çözüldü': 0
+    };
+
+    issues.forEach(issue => {
+      const statusText = getStatusText(issue.status);
+      if (statusCounts[statusText] !== undefined) {
+        statusCounts[statusText]++;
+      }
+    });
+
+    return Object.entries(statusCounts).map(([name, value]) => ({ name, value }));
+  };
+
+  const getCategoryData = () => {
+    const categoryCounts = {};
+
+    issues.forEach(issue => {
+      const categoryText = getCategoryText(issue.category);
+      categoryCounts[categoryText] = (categoryCounts[categoryText] || 0) + 1;
+    });
+
+    return Object.entries(categoryCounts).map(([name, value]) => ({ name, value }));
+  };
+
+  // Grafik renkleri
+  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
+
+  const statusData = getStatusData();
+  const categoryData = getCategoryData();
+
   if (!isAuthenticated || user?.role !== 'admin') {
     return null;
   }
@@ -126,6 +162,61 @@ const AdminDashboard = () => {
           Toplam {issues.length} sorun
         </div>
       </div>
+
+      {/* Grafikler */}
+      {!loading && issues.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Statü Dağılımı - Pasta Grafik */}
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Statü Dağılımı</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={statusData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {statusData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Kategori Dağılımı - Sütun Grafik */}
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Kategori Dağılımı</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={categoryData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="name" 
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
+                  interval={0}
+                  tick={{ fontSize: 12 }}
+                />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#3B82F6">
+                  {categoryData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center items-center h-64">

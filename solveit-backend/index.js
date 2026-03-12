@@ -4,6 +4,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 const cron = require('node-cron');
+const http = require('http');
+const { Server } = require('socket.io');
 
 // Route imports
 const authRoutes = require('./src/routes/authRoutes');
@@ -12,6 +14,18 @@ const userRoutes = require('./src/routes/userRoutes');
 const cleanupOldIssues = require('./src/utils/cleanupOldIssues');
 
 const app = express();
+
+// Socket.io setup
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"]
+    }
+});
+
+// Make io available to other files
+app.set('socketio', io);
 
 // Middleware
 app.use(cors());
@@ -35,7 +49,17 @@ cron.schedule('0 0 * * *', () => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log('[CRON] Scheduled cleanup: Daily at 00:00 (midnight)');
+    console.log('[SOCKET] Socket.io server initialized');
+});
+
+// Socket connection handling
+io.on('connection', (socket) => {
+    console.log('[SOCKET] User connected:', socket.id);
+    
+    socket.on('disconnect', () => {
+        console.log('[SOCKET] User disconnected:', socket.id);
+    });
 });

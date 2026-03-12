@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import api from '../utils/axios';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
@@ -14,20 +14,58 @@ const Profile = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
+  const [currentXp, setCurrentXp] = useState(0);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const getLevelInfo = (xp) => {
+    if (xp >= 150) {
+      return {
+        title: 'Şehir Kahramanı',
+        color: 'bg-purple-100 text-purple-800',
+        icon: '🏆'
+      };
+    } else if (xp >= 50) {
+      return {
+        title: 'Aktif Gözlemci',
+        color: 'bg-blue-100 text-blue-800',
+        icon: '👁️'
+      };
+    } else {
+      return {
+        title: 'Duyarlı Vatandaş',
+        color: 'bg-green-100 text-green-800',
+        icon: '🌱'
+      };
+    }
+  };
+
+  const levelInfo = getLevelInfo(currentXp);
+
+  // Güncel kullanıcı verilerini çek
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await api.get('/auth/me');
+      const userData = response.data.data;
+      setCurrentUser(userData);
+      setCurrentXp(userData.xp || 0);
+      
+      // Form verilerini güncelle
+      setFormData({
+        name: userData.name || '',
+        email: userData.email || '',
+        department: userData.department || '',
+        contactInfo: userData.contactInfo || ''
+      });
+    } catch (error) {
+      console.error('Kullanıcı bilgileri çekilirken hata:', error);
+      toast.error('Kullanıcı bilgileri yüklenirken hata oluştu');
+    }
+  };
 
   useEffect(() => {
-    console.log('Profile useEffect - user:', user);
-    console.log('Profile useEffect - isAuthenticated:', isAuthenticated);
-    
-    if (isAuthenticated && user) {
-      // AuthContext'teki user bilgilerini kullan
-      setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        department: user.department || '',
-        contactInfo: user.contactInfo || ''
-      });
-    } else if (!isAuthenticated) {
+    if (isAuthenticated) {
+      fetchCurrentUser();
+    } else {
       setFetchLoading(false);
     }
   }, [isAuthenticated]);
@@ -35,7 +73,7 @@ const Profile = () => {
   const fetchUserProfile = async () => {
     try {
       setFetchLoading(true);
-      const response = await axios.get('http://localhost:5000/api/users/profile');
+      const response = await api.get('/users/profile');
       const profileData = response.data;
       
       setFormData({
@@ -97,8 +135,8 @@ const Profile = () => {
     setLoading(true);
     
     try {
-      const response = await axios.put(
-        'http://localhost:5000/api/users/profile',
+      const response = await api.put(
+        '/users/profile',
         {
           name: formData.name,
           email: formData.email,
@@ -165,6 +203,47 @@ const Profile = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Profil Ayarları</h1>
         <p className="text-gray-600">Kişisel bilgilerinizi yönetin</p>
+      </div>
+
+      {/* XP ve Seviye Kartı */}
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-6 mb-8 text-white">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center space-x-3 mb-2">
+              <span className="text-4xl">{levelInfo.icon}</span>
+              <div>
+                <h2 className="text-2xl font-bold">{levelInfo.title}</h2>
+                <p className="text-blue-100">Seviyeniz</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold">{currentXp}</div>
+              <div className="text-blue-100">Toplam XP</div>
+            </div>
+          </div>
+          
+          {/* XP Progress Bar */}
+          <div className="mt-4">
+            <div className="flex justify-between text-sm mb-1">
+              <span>Sıradaki Seviye</span>
+              <span>
+                {currentXp < 50 ? `${50 - currentXp} XP` : 
+                 currentXp < 150 ? `${150 - currentXp} XP` : 
+                 'Maksimum Seviye'}
+              </span>
+            </div>
+            <div className="w-full bg-blue-300 rounded-full h-3">
+              <div 
+                className="bg-white h-3 rounded-full transition-all duration-500"
+                style={{
+                  width: currentXp < 50 ? `${(currentXp / 50) * 100}%` :
+                         currentXp < 150 ? `${((currentXp - 50) / 100) * 100}%` :
+                         '100%'
+                }}
+              ></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -253,25 +332,31 @@ const Profile = () => {
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Kayıt Tarihi:</span>
               <span className="text-sm text-gray-900">
-                {user ? new Date(user.createdAt).toLocaleDateString('tr-TR') : 'Bilinmiyor'}
+                {currentUser ? new Date(currentUser.createdAt).toLocaleDateString('tr-TR') : 'Bilinmiyor'}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Kullanıcı Adı:</span>
               <span className="text-sm text-gray-900">
-                {user?.name || 'Bilinmiyor'}
+                {currentUser?.name || 'Bilinmiyor'}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">E-posta:</span>
               <span className="text-sm text-gray-900">
-                {user?.email || 'Bilinmiyor'}
+                {currentUser?.email || 'Bilinmiyor'}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600">Kullanıcı Rolü:</span>
               <span className="text-sm text-gray-900">
-                {user?.role === 'admin' ? 'Yönetici' : 'Kullanıcı'}
+                {currentUser?.role === 'admin' ? 'Yönetici' : 'Kullanıcı'}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Deneyim Puanı (XP):</span>
+              <span className="text-sm font-bold text-blue-600">
+                {currentXp} XP
               </span>
             </div>
             <div className="flex justify-between">

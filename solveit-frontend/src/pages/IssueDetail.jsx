@@ -3,11 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/axios';
 import toast from 'react-hot-toast';
+import { io } from 'socket.io-client';
 
 const IssueDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -79,6 +80,28 @@ const IssueDetail = () => {
     fetchIssue();
   }, [id]);
 
+  // Socket.io bağlantısı
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const socket = io('http://localhost:5000');
+    
+    socket.on('voteUpdated', (data) => {
+      console.log('IssueDetail - Vote updated:', data);
+      
+      // Eğer bu issue ise, oyları güncelle
+      if (data.issueId === id) {
+        setIssue(prevIssue => 
+          prevIssue ? { ...prevIssue, upvotes: data.upvotes, downvotes: data.downvotes } : null
+        );
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [isAuthenticated, id]);
+
   const handleStatusChange = async (newStatus) => {
     if (!canEdit) {
       toast.error('Bu işlem için yetkiniz yok');
@@ -128,6 +151,52 @@ const IssueDetail = () => {
     } finally {
       setDeleteLoading(false);
     }
+  };
+
+  const handleUpvote = async () => {
+    if (!isAuthenticated) {
+      toast.error('Oy vermek için giriş yapmalısınız');
+      return;
+    }
+
+    try {
+      const response = await api.post(`/issues/${id}/upvote`);
+      setIssue(response.data.data);
+      toast.success('Oyunuz başarıyla güncellendi');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'İşlem başarısız oldu');
+      console.error('Error upvoting:', error);
+    }
+  };
+
+  const handleDownvote = async () => {
+    if (!isAuthenticated) {
+      toast.error('Oy vermek için giriş yapmalısınız');
+      return;
+    }
+
+    try {
+      const response = await api.post(`/issues/${id}/downvote`);
+      setIssue(response.data.data);
+      toast.success('Oyunuz başarıyla güncellendi');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'İşlem başarısız oldu');
+      console.error('Error downvoting:', error);
+    }
+  };
+
+  const getScore = () => {
+    return (issue?.upvotes?.length || 0) - (issue?.downvotes?.length || 0);
+  };
+
+  const hasUpvoted = () => {
+    if (!isAuthenticated || !user) return false;
+    return issue?.upvotes?.some(upvote => upvote._id === user._id || upvote === user._id);
+  };
+
+  const hasDownvoted = () => {
+    if (!isAuthenticated || !user) return false;
+    return issue?.downvotes?.some(downvote => downvote._id === user._id || downvote === user._id);
   };
 
   const formatDate = (dateString) => {
@@ -192,7 +261,7 @@ const IssueDetail = () => {
 
       <div className="card mb-6">
         <div className="flex justify-between items-start mb-4">
-          <div>
+          <div className="flex-1">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">{issue.title}</h1>
             <div className="flex items-center gap-3 mb-4">
               {getCategoryBadge(issue.category)}
@@ -200,38 +269,85 @@ const IssueDetail = () => {
             </div>
           </div>
           
-          {canEdit && (
+          <div className="flex items-center space-x-4 ml-6">
+            {/* Upvote/Downvote Butonları */}
             <div className="flex items-center space-x-2">
-              <select
-                value={issue.status}
-                onChange={(e) => handleStatusChange(e.target.value)}
-                disabled={statusLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+              <button
+                onClick={handleUpvote}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  hasUpvoted()
+                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
               >
-                <option value="PENDING">Beklemede</option>
-                <option value="IN_PROGRESS">İnceleniyor</option>
-                <option value="RESOLVED">Çözüldü</option>
-              </select>
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+                <span>Destekle</span>
+              </button>
               
               <button
-                onClick={handleDelete}
-                disabled={deleteLoading}
-                className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-sm p-2"
-                title="Sil"
+                onClick={handleDownvote}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  hasDownvoted()
+                    ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
               >
-                {deleteLoading ? (
-                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                ) : (
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                )}
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                <span>Katılmıyorum</span>
               </button>
             </div>
-          )}
+            
+            {/* Skor */}
+            <div className="flex items-center space-x-1">
+              <span className={`px-3 py-2 rounded-full text-lg font-bold ${
+                getScore() > 0 
+                  ? 'bg-green-100 text-green-700'
+                  : getScore() < 0
+                  ? 'bg-red-100 text-red-700'
+                  : 'bg-gray-100 text-gray-700'
+              }`}>
+                {getScore() > 0 && '+'}{getScore()}
+              </span>
+              <span className="text-gray-500 text-sm">Skor</span>
+            </div>
+            
+            {canEdit && (
+              <div className="flex items-center space-x-2 border-l border-gray-200 pl-4">
+                <select
+                  value={issue.status}
+                  onChange={(e) => handleStatusChange(e.target.value)}
+                  disabled={statusLoading}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+                >
+                  <option value="PENDING">Beklemede</option>
+                  <option value="IN_PROGRESS">İnceleniyor</option>
+                  <option value="RESOLVED">Çözüldü</option>
+                </select>
+                
+                <button
+                  onClick={handleDelete}
+                  disabled={deleteLoading}
+                  className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-sm p-2"
+                  title="Sil"
+                >
+                  {deleteLoading ? (
+                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  ) : (
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="prose max-w-none mb-6">

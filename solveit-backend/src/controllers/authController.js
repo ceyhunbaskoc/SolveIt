@@ -60,6 +60,7 @@ exports.login = async (req, res) => {
                 email: user.email,
                 role: user.role,
                 department: user.department,
+                xp: user.xp || 0,
                 createdAt: user.createdAt
             }
         });

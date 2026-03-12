@@ -5,7 +5,9 @@ const {
     getIssueById, 
     getMyIssues,
     updateIssueStatus, 
-    deleteIssue        
+    deleteIssue,
+    upvoteIssue,
+    downvoteIssue        
 } = require('../controllers/issueController');
 const { protect } = require('../middleware/auth');
 const upload = require('../middleware/upload');
@@ -20,6 +22,8 @@ router.get('/:id', getIssueById);
 router.get('/user/my-issues', protect, getMyIssues);
 router.post('/', protect, upload.single('image'), createIssue); 
 router.patch('/:id/status', protect, updateIssueStatus); 
-router.delete('/:id', protect, deleteIssue);             
+router.delete('/:id', protect, deleteIssue);
+router.post('/:id/upvote', protect, upvoteIssue);
+router.post('/:id/downvote', protect, downvoteIssue);             
 
 module.exports = router;

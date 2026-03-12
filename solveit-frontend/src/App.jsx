@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
+import { useAuth } from './contexts/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './components/Layout';
 import Login from './pages/Login';
@@ -13,12 +14,57 @@ import MyIssues from './pages/MyIssues';
 import Profile from './pages/Profile';
 import Test from './pages/Test';
 import AdminDashboard from './pages/AdminDashboard';
+import { io } from 'socket.io-client';
+import api from './utils/axios';
+import toast from 'react-hot-toast';
+
+// Socket connection
+const socket = io('http://localhost:5000');
+
+// Socket component
+function SocketProvider({ children }) {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      socket.emit('join', { userId: user._id });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // Status güncelleme bildirimlerini dinle
+    socket.on('statusUpdated', (data) => {
+      console.log('Status updated:', data);
+      
+      // Eğer bildirim bu kullanıcıya aitse
+      if (user && data.reporterId === user._id) {
+        const statusText = data.status === 'RESOLVED' ? 'Çözüldü' : 
+                          data.status === 'IN_PROGRESS' ? 'İnceleniyor' : 'Beklemede';
+        
+        toast.success(`Müjde! Sorununuz "${statusText}" olarak güncellendi! ${data.status === 'RESOLVED' ? '+20 XP kazandınız.' : ''}`, {
+          duration: 6000,
+          style: {
+            background: '#10b981',
+            color: '#fff',
+          }
+        });
+      }
+    });
+
+    return () => {
+      socket.off('statusUpdated');
+    };
+  }, [user]);
+
+  return children;
+}
 
 function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <Router>
+        <SocketProvider>
+          <Router>
           <div className="App">
             <Toaster
               position="top-right"
@@ -61,8 +107,9 @@ function App() {
             </Routes>
           </div>
         </Router>
-      </AuthProvider>
-    </ErrorBoundary>
+      </SocketProvider>
+    </AuthProvider>
+  </ErrorBoundary>
   );
 }
 

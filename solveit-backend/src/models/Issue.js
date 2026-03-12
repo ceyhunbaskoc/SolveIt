@@ -30,6 +30,18 @@ const issueSchema = new mongoose.Schema({
     imageUrl: { 
         type: String, 
         default: 'no-photo.jpg'
+    },
+    upvotes: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
+    downvotes: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
+    xpAwarded: {
+        type: Boolean,
+        default: false
     }
 }, { 
     timestamps: true

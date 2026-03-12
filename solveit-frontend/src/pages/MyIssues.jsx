@@ -3,12 +3,50 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/axios';
 import toast from 'react-hot-toast';
+import { io } from 'socket.io-client';
 
 const MyIssues = () => {
   const { user, isAuthenticated } = useAuth();
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState(null);
+
+  // Socket.io bağlantısı
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const socket = io('http://localhost:5000');
+    
+    socket.on('statusUpdated', (data) => {
+      console.log('MyIssues - Status updated:', data);
+      
+      // State içindeki ilgili sorunu güncelle
+      setIssues(prevIssues => 
+        prevIssues.map(issue => 
+          issue._id === data.issueId 
+            ? { ...issue, status: data.status === 'RESOLVED' ? 'cozuldu' : data.status === 'IN_PROGRESS' ? 'inceleniyor' : 'beklemede' }
+            : issue
+        )
+      );
+    });
+
+    socket.on('voteUpdated', (data) => {
+      console.log('MyIssues - Vote updated:', data);
+      
+      // State içindeki ilgili sorunun oylarını güncelle
+      setIssues(prevIssues => 
+        prevIssues.map(issue => 
+          issue._id === data.issueId 
+            ? { ...issue, upvotes: data.upvotes, downvotes: data.downvotes }
+            : issue
+        )
+      );
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [isAuthenticated]);
 
   const categories = {
     'altyapi': 'Altyapı',

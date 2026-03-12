@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     department: {
         type: String,
         default: 'Belirtilmemiş'
+    },
+    xp: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

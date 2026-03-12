@@ -1,12 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../utils/axios';
 import toast from 'react-hot-toast';
+import { io } from 'socket.io-client';
 
 const Dashboard = () => {
+  const { user, isAuthenticated } = useAuth();
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  // Socket.io bağlantısı
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const socket = io('http://localhost:5000');
+    
+    socket.on('statusUpdated', (data) => {
+      console.log('Dashboard - Status updated:', data);
+      
+      // State içindeki ilgili sorunu güncelle
+      setIssues(prevIssues => 
+        prevIssues.map(issue => 
+          issue._id === data.issueId 
+            ? { ...issue, status: data.status === 'RESOLVED' ? 'cozuldu' : data.status === 'IN_PROGRESS' ? 'inceleniyor' : 'beklemede' }
+            : issue
+        )
+      );
+    });
+
+    socket.on('voteUpdated', (data) => {
+      console.log('Dashboard - Vote updated:', data);
+      
+      // State içindeki ilgili sorunun oylarını güncelle
+      setIssues(prevIssues => 
+        prevIssues.map(issue => 
+          issue._id === data.issueId 
+            ? { ...issue, upvotes: data.upvotes, downvotes: data.downvotes }
+            : issue
+        )
+      );
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [isAuthenticated]);
   
   const categories = [
     { id: 'all', name: 'Tümü', color: 'bg-gray-500' },
@@ -50,7 +90,7 @@ const Dashboard = () => {
         ? 'http://localhost:5000/api/issues'
         : `http://localhost:5000/api/issues?category=${category}`;
       
-      const response = await axios.get(url);
+      const response = await api.get(url);
       setIssues(response.data.data || response.data);
     } catch (error) {
       toast.error('Sorunlar yüklenirken hata oluştu');
@@ -58,6 +98,68 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUpvote = async (issueId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      toast.error('Oy vermek için giriş yapmalısınız');
+      return;
+    }
+
+    try {
+      const response = await api.post(`/issues/${issueId}/upvote`);
+      
+      // Optimistic UI update
+      setIssues(prev => prev.map(issue => 
+        issue._id === issueId ? response.data.data : issue
+      ));
+      
+      toast.success('Oyunuz başarıyla güncellendi');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'İşlem başarısız oldu');
+      console.error('Error upvoting:', error);
+    }
+  };
+
+  const handleDownvote = async (issueId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      toast.error('Oy vermek için giriş yapmalısınız');
+      return;
+    }
+
+    try {
+      const response = await api.post(`/issues/${issueId}/downvote`);
+      
+      // Optimistic UI update
+      setIssues(prev => prev.map(issue => 
+        issue._id === issueId ? response.data.data : issue
+      ));
+      
+      toast.success('Oyunuz başarıyla güncellendi');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'İşlem başarısız oldu');
+      console.error('Error downvoting:', error);
+    }
+  };
+
+  const getScore = (issue) => {
+    return (issue.upvotes?.length || 0) - (issue.downvotes?.length || 0);
+  };
+
+  const hasUpvoted = (issue) => {
+    if (!isAuthenticated || !user) return false;
+    return issue.upvotes?.some(upvote => upvote._id === user._id || upvote === user._id);
+  };
+
+  const hasDownvoted = (issue) => {
+    if (!isAuthenticated || !user) return false;
+    return issue.downvotes?.some(downvote => downvote._id === user._id || downvote === user._id);
   };
 
   useEffect(() => {
@@ -199,6 +301,51 @@ const Dashboard = () => {
                       Konum belirtilmiş
                     </span>
                   )}
+                </div>
+
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={(e) => handleUpvote(issue._id, e)}
+                      className={`flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                        hasUpvoted(issue)
+                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                      <span>Destekle</span>
+                    </button>
+                    
+                    <button
+                      onClick={(e) => handleDownvote(issue._id, e)}
+                      className={`flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                        hasDownvoted(issue)
+                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                      <span>Katılmıyorum</span>
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center space-x-1 text-sm font-medium">
+                    <span className={`px-2 py-1 rounded-full ${
+                      getScore(issue) > 0 
+                        ? 'bg-green-100 text-green-700'
+                        : getScore(issue) < 0
+                        ? 'bg-red-100 text-red-700'
+                        : 'bg-gray-100 text-gray-700'
+                    }`}>
+                      {getScore(issue) > 0 && '+'}{getScore(issue)}
+                    </span>
+                    <span className="text-gray-500 text-xs">Skor</span>
+                  </div>
                 </div>
                 
                 {issue.image && (
