@@ -1,120 +1,13 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniFix - Kampüs Sorun Bildirim Sistemi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .issue-card { margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .status-badge { font-size: 0.85em; }
-    </style>
-</head>
-<body>
-
-<div class="container mt-5">
-    <h1 class="text-center mb-4">🛠️ UniFix - SDU Sorun Bildirim Platformu</h1>
-    
-    <div class="row">
-        <div class="col-md-5">
-            <div class="card p-4">
-                <h4>Yeni Sorun Bildir</h4>
-                <form id="issueForm">
-                    <div class="mb-3">
-                        <label class="form-label">Başlık</label>
-                        <input type="text" class="form-control" id="title" required placeholder="Örn: Kütüphane interneti koptu">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Kategori</label>
-                        <select class="form-select" id="category" required>
-                            <option value="Teknik">Teknik Altyapı</option>
-                            <option value="Temizlik">Temizlik</option>
-                            <option value="Güvenlik">Güvenlik</option>
-                            <option value="Diğer">Diğer</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Açıklama</label>
-                        <textarea class="form-control" id="description" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Bildirimi Gönder</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-md-7">
-            <h4>Kampüsteki Güncel Sorunlar</h4>
-            <div id="issuesList">
-                <div class="text-center text-muted mt-5">Veriler yükleniyor...</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    const API_URL = 'http://localhost:5000/api/issues';
-
-    // get
-    async function fetchIssues() {
-        try {
-            const response = await fetch(API_URL);
-            const result = await response.json();
-            const issuesList = document.getElementById('issuesList');
-            
-            issuesList.innerHTML = '';
-
-            if (result.data.length === 0) {
-                issuesList.innerHTML = '<p class="text-muted">Şu an kayıtlı bir sorun bulunmuyor.</p>';
-                return;
-            }
-
-            result.data.forEach(issue => {
-                let statusColor = issue.status === 'PENDING' ? 'bg-warning text-dark' : 'bg-success';
-                
-                issuesList.innerHTML += `
-                    <div class="card issue-card p-3">
-                        <h5>${issue.title} <span class="badge ${statusColor} status-badge float-end">${issue.status}</span></h5>
-                        <p class="mb-1 text-muted"><small>Kategori: ${issue.category}</small></p>
-                        <p class="mb-0">${issue.description}</p>
-                    </div>
-                `;
-            });
-        } catch (error) {
-            console.error('Veri çekme hatası:', error);
-            document.getElementById('issuesList').innerHTML = '<p class="text-danger">Veriler çekilemedi. Backend çalışıyor mu?</p>';
-        }
-    }
-
-    // post
-    document.getElementById('issueForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const newIssue = {
-            title: document.getElementById('title').value,
-            category: document.getElementById('category').value,
-            description: document.getElementById('description').value
-        };
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newIssue)
-            });
-
-            if (response.ok) {
-                document.getElementById('issueForm').reset();
-                fetchIssues();
-            }
-        } catch (error) {
-            console.error('Gönderme hatası:', error);
-            alert('Bir hata oluştu!');
-        }
-    });
-
-    fetchIssues();
-</script>
-
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>solveit-frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

@@ -1,0 +1,222 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
+const Dashboard = () => {
+  const [issues, setIssues] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  const categories = [
+    { id: 'all', name: 'Tümü', color: 'bg-gray-500' },
+    { id: 'altyapi', name: 'Altyapı', color: 'bg-blue-500' },
+    { id: 'temizlik', name: 'Temizlik', color: 'bg-green-500' },
+    { id: 'guvenlik', name: 'Güvenlik', color: 'bg-red-500' },
+    { id: 'ulasim', name: 'Ulaşım', color: 'bg-yellow-500' },
+    { id: 'yesilalan', name: 'Yeşil Alan', color: 'bg-emerald-500' },
+    { id: 'aydinlatma', name: 'Aydınlatma', color: 'bg-orange-500' },
+    { id: 'diger', name: 'Diğer', color: 'bg-purple-500' }
+  ];
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'beklemede':
+        return <span className="bg-yellow-100 text-yellow-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">Beklemede</span>;
+      case 'inceleniyor':
+        return <span className="bg-blue-100 text-blue-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">İnceleniyor</span>;
+      case 'cozuldu':
+        return <span className="bg-green-100 text-green-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">Çözüldü</span>;
+      default:
+        return <span className="bg-gray-100 text-gray-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">{status}</span>;
+    }
+  };
+
+  const getCategoryBadge = (category) => {
+    const categoryInfo = categories.find(cat => cat.id === category);
+    if (!categoryInfo) return <span className="bg-gray-100 text-gray-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">{category}</span>;
+    
+    return (
+      <span className={`${categoryInfo.color} text-white inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium`}>
+        {categoryInfo.name}
+      </span>
+    );
+  };
+
+  const fetchIssues = async (category = 'all') => {
+    try {
+      setLoading(true);
+      const url = category === 'all' 
+        ? 'http://localhost:5000/api/issues'
+        : `http://localhost:5000/api/issues?category=${category}`;
+      
+      const response = await axios.get(url);
+      setIssues(response.data.data || response.data);
+    } catch (error) {
+      toast.error('Sorunlar yüklenirken hata oluştu');
+      console.error('Error fetching issues:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchIssues(selectedCategory);
+  }, [selectedCategory]);
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+      if (diffHours === 0) {
+        const diffMinutes = Math.floor(diffTime / (1000 * 60));
+        return diffMinutes <= 1 ? 'Az önce' : `${diffMinutes} dakika önce`;
+      }
+      return diffHours === 1 ? '1 saat önce' : `${diffHours} saat önce`;
+    } else if (diffDays === 1) {
+      return 'Dün';
+    } else if (diffDays < 7) {
+      return `${diffDays} gün önce`;
+    } else {
+      return date.toLocaleDateString('tr-TR');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Kampüs ve Şehir Sorunları</h1>
+          <p className="text-gray-600">Topluluğumuzdaki sorunları görün ve katkıda bulunun</p>
+        </div>
+        
+        <div className="mb-6">
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="h-8 w-20 bg-gray-200 rounded-full animate-pulse"></div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
+              <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+              <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Kampüs ve Şehir Sorunları</h1>
+        <p className="text-gray-600">Topluluğumuzdaki sorunları görün ve katkıda bulunun</p>
+      </div>
+
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategoryClick(category.id)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                selectedCategory === category.id
+                  ? `${category.color} text-white`
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {issues.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-4">
+            <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Henüz sorun bildirilmedi</h3>
+          <p className="text-gray-500 mb-6">
+            {selectedCategory === 'all' 
+              ? 'Topluluğumuzda henüz bir sorun bildirilmemiş.' 
+              : 'Bu kategoride henüz sorun bildirilmemiş.'}
+          </p>
+          <Link
+            to="/report"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            İlk Sorunu Bildir
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {issues.map((issue) => (
+            <Link
+              key={issue._id}
+              to={`/issues/${issue._id}`}
+              className="block"
+            >
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 cursor-pointer">
+                <div className="mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                    {issue.title}
+                  </h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    {getCategoryBadge(issue.category)}
+                    {getStatusBadge(issue.status)}
+                  </div>
+                </div>
+                
+                <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+                  {issue.description}
+                </p>
+                
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>{formatDate(issue.createdAt)}</span>
+                  {issue.location && (
+                    <span className="flex items-center">
+                      <svg className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Konum belirtilmiş
+                    </span>
+                  )}
+                </div>
+                
+                {issue.image && (
+                  <div className="mt-3">
+                    <img 
+                      src={issue.image} 
+                      alt={issue.title}
+                      className="w-full h-32 object-cover rounded-md"
+                    />
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Dashboard;

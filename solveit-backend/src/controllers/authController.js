@@ -53,7 +53,15 @@ exports.login = async (req, res) => {
             success: true,
             message: 'Giriş başarılı.',
             token: generateToken(user._id),
-            role: user.role
+            role: user.role,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                department: user.department,
+                createdAt: user.createdAt
+            }
         });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Sunucu hatası', error: error.message });

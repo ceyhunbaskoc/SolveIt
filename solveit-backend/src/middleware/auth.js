@@ -20,8 +20,19 @@ exports.protect = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        console.log('Auth middleware - decoded token:', decoded);
+        console.log('Auth middleware - decoded.id:', decoded.id);
 
         req.user = await User.findById(decoded.id).select('-password');
+        
+        // ObjectId'yi string'e çevir ki karşılaştırmalar doğru çalışsın
+        if (req.user) {
+          req.user._id = req.user._id.toString();
+        }
+        
+        console.log('Auth middleware - req.user:', req.user);
+        console.log('Auth middleware - req.user._id:', req.user._id);
         
         if(!req.user) {
            return res.status(401).json({ success: false, message: 'Bu tokene ait kullanıcı artık mevcut değil.' }); 
@@ -29,6 +40,7 @@ exports.protect = async (req, res, next) => {
 
         next();
     } catch (error) {
+        console.error('Auth middleware error:', error);
         return res.status(401).json({ 
             success: false, 
             message: 'Geçersiz veya süresi dolmuş token.' 
