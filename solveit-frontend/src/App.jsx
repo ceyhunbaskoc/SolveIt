@@ -14,6 +14,8 @@ import MyIssues from './pages/MyIssues';
 import Profile from './pages/Profile';
 import Test from './pages/Test';
 import AdminDashboard from './pages/AdminDashboard';
+import Leaderboard from './pages/Leaderboard';
+import MapPage from './pages/MapPage';
 import { io } from 'socket.io-client';
 import api from './utils/axios';
 import toast from 'react-hot-toast';
@@ -102,6 +104,8 @@ function App() {
                 <Route path="my-issues" element={<MyIssues />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="admin" element={<AdminDashboard />} />
+                <Route path="leaderboard" element={<Leaderboard />} />
+                <Route path="map" element={<MapPage />} />
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

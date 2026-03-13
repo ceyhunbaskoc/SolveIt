@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/axios';
 import toast from 'react-hot-toast';
@@ -14,6 +14,8 @@ const IssueDetail = () => {
   const [loading, setLoading] = useState(true);
   const [statusLoading, setStatusLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [commentLoading, setCommentLoading] = useState(false);
 
   const canEdit = useMemo(() => {
     return user && (issue?.reporterId?._id === user._id || user.role === 'admin');
@@ -97,6 +99,17 @@ const IssueDetail = () => {
       }
     });
 
+    socket.on('newComment', (data) => {
+      console.log('IssueDetail - New comment:', data);
+      
+      // Eğer bu issue ise, yorumları güncelle
+      if (data.issueId === id) {
+        setIssue(prevIssue => 
+          prevIssue ? { ...prevIssue, comments: data.comments } : null
+        );
+      }
+    });
+
     return () => {
       socket.disconnect();
     };
@@ -150,6 +163,36 @@ const IssueDetail = () => {
       toast.error(errorMessage);
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!isAuthenticated) {
+      toast.error('Yorum yapmak için giriş yapmalısınız');
+      return;
+    }
+
+    if (!commentText.trim()) {
+      toast.error('Yorum metni boş olamaz');
+      return;
+    }
+
+    setCommentLoading(true);
+    try {
+      const response = await api.post(`/issues/${id}/comments`, {
+        text: commentText.trim()
+      });
+      
+      setIssue(response.data.data);
+      setCommentText('');
+      toast.success('Yorumunuz başarıyla eklendi');
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Yorum eklenirken hata oluştu';
+      toast.error(errorMessage);
+    } finally {
+      setCommentLoading(false);
     }
   };
 
@@ -212,8 +255,7 @@ const IssueDetail = () => {
 
   const getMapUrl = () => {
     if (!issue.location) return null;
-    const { latitude, longitude } = issue.location;
-    return `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=15`;
+    return `https://www.openstreetmap.org/?mlat=${issue.location.lat}&mlon=${issue.location.lng}&zoom=15`;
   };
 
   if (loading) {
@@ -354,6 +396,99 @@ const IssueDetail = () => {
           <p className="text-gray-700 whitespace-pre-wrap">{issue.description}</p>
         </div>
 
+        {/* Yorumlar Bölümü */}
+        <div className="border-t border-gray-200 pt-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Yorumlar ({issue.comments?.length || 0})</h3>
+          
+          {/* Yorum Ekleme Formu */}
+          {isAuthenticated && (
+            <form onSubmit={handleCommentSubmit} className="mb-6">
+              <div className="flex space-x-3">
+                <div className="flex-shrink-0">
+                  <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
+                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    placeholder="Yorumunuzu yazın..."
+                    disabled={commentLoading}
+                  />
+                  <div className="mt-2 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={commentLoading || !commentText.trim()}
+                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
+                    >
+                      {commentLoading ? (
+                        <span className="flex items-center">
+                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Gönderiliyor...
+                        </span>
+                      ) : (
+                        'Gönder'
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          )}
+
+          {/* Yorumlar Listesi */}
+          <div className="space-y-4">
+            {issue.comments?.length > 0 ? (
+              issue.comments.map((comment, index) => (
+                <div key={index} className="flex space-x-3">
+                  <div className="flex-shrink-0">
+                    <div className={`h-10 w-10 rounded-full flex items-center justify-center text-white font-medium ${
+                      comment.user?.role === 'admin' ? 'bg-red-500' : 'bg-gray-500'
+                    }`}>
+                      {comment.user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium text-gray-900">{comment.user?.name || 'Bilinmeyen Kullanıcı'}</span>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        comment.user?.role === 'admin' 
+                          ? 'bg-red-100 text-red-800' 
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {comment.user?.role === 'admin' ? 'Admin' : 'Kullanıcı'}
+                      </span>
+                      <span className="text-gray-500 text-sm">
+                        {new Date(comment.createdAt).toLocaleDateString('tr-TR', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 mt-1 whitespace-pre-wrap">{comment.text}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <p className="mt-2">Henüz yorum yapılmamış. İlk yorumu siz yapın!</p>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="font-medium text-gray-900 mb-2">Bildiren</h3>
@@ -375,16 +510,25 @@ const IssueDetail = () => {
             <h3 className="font-medium text-gray-900 mb-2">Konum</h3>
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="text-gray-600 mb-2">
-                Enlem: {issue.location?.latitude?.toFixed(6) || 'Bilinmiyor'}, Boylam: {issue.location?.longitude?.toFixed(6) || 'Bilinmiyor'}
+                Enlem: {issue.location?.lat?.toFixed(6)}, Boylam: {issue.location?.lng?.toFixed(6)}
               </p>
-              <a
-                href={getMapUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-sm"
-              >
-                Haritada Göster
-              </a>
+              <div className="flex space-x-2">
+                <a
+                  href={getMapUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
+                >
+                  Haritada Aç
+                </a>
+                <Link
+                  to="/map"
+                  state={{ center: [issue.location.lat, issue.location.lng] }}
+                  className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm"
+                >
+                  🗺️ Haritada Göster
+                </Link>
+              </div>
             </div>
           </div>
         )}

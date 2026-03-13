@@ -24,8 +24,8 @@ const issueSchema = new mongoose.Schema({
         required: true 
     },
     location: {
-        latitude: { type: Number },
-        longitude: { type: Number }
+        lat: { type: Number },
+        lng: { type: Number }
     },
     imageUrl: { 
         type: String, 
@@ -42,7 +42,22 @@ const issueSchema = new mongoose.Schema({
     xpAwarded: {
         type: Boolean,
         default: false
-    }
+    },
+    comments: [{
+        user: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        text: {
+            type: String,
+            required: [true, 'Please add comment text']
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 }, { 
     timestamps: true
 });
