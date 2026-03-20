@@ -157,8 +157,8 @@ const AdminDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Yönetici Paneli</h1>
-        <div className="text-sm text-gray-500">
+        <h1 className="text-3xl font-bold text-white">Yönetici Paneli</h1>
+        <div className="text-sm text-gray-400">
           Toplam {issues.length} sorun
         </div>
       </div>
@@ -167,8 +167,8 @@ const AdminDashboard = () => {
       {!loading && issues.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Statü Dağılımı - Pasta Grafik */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Statü Dağılımı</h3>
+          <div className="bg-[#161717] p-6 rounded-[2rem] shadow-lg border border-[#2A2B2B]">
+            <h3 className="text-lg font-semibold text-white mb-4">Statü Dağılımı</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -192,8 +192,8 @@ const AdminDashboard = () => {
           </div>
 
           {/* Kategori Dağılımı - Sütun Grafik */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Kategori Dağılımı</h3>
+          <div className="bg-[#161717] p-6 rounded-[2rem] shadow-lg border border-[#2A2B2B]">
+            <h3 className="text-lg font-semibold text-white mb-4">Kategori Dağılımı</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={categoryData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -223,55 +223,55 @@ const AdminDashboard = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
       ) : (
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="bg-[#161717] shadow-lg rounded-[2rem] overflow-hidden border border-[#2A2B2B]">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-[#2A2B2B]">
+              <thead className="bg-[#0F1010]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Tarih
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Başlık
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Kategori
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Bildiren Kişi
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     Statü
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                     İşlemler
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-[#161717] divide-y divide-[#2A2B2B]">
                 {issues.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                    <td colSpan="6" className="px-6 py-4 text-center text-gray-400">
                       Henüz hiç sorun bulunmuyor
                     </td>
                   </tr>
                 ) : (
                   issues.map((issue) => (
-                    <tr key={issue._id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={issue._id} className="hover:bg-[#0F1010]">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                         {formatDate(issue.createdAt)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
+                      <td className="px-6 py-4 text-sm text-white">
                         <div className="max-w-xs truncate" title={issue.title}>
                           {issue.title}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
                           {getCategoryText(issue.category)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                         {issue.reporterId?.name || issue.reporterId?.username || 'Bilinmeyen'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -279,12 +279,12 @@ const AdminDashboard = () => {
                           value={issue.status}
                           onChange={(e) => updateStatus(issue._id, e.target.value)}
                           disabled={updatingIssues.has(issue._id)}
-                          className={`px-3 py-1 text-xs font-medium rounded-full border-0 focus:ring-2 focus:ring-blue-500 cursor-pointer ${
+                          className={`px-3 py-1 text-xs font-medium rounded-full border-0 focus:ring-[#C3F746] cursor-pointer bg-[#0F1010] text-gray-200 ${
                             issue.status === 'PENDING' 
-                              ? 'bg-yellow-100 text-yellow-800'
+                              ? 'bg-[#F7721A]/20 text-[#F7721A] border border-[#F7721A]/30'
                               : issue.status === 'IN_PROGRESS'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-green-100 text-green-800'
+                              ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                              : 'bg-[#C3F746]/20 text-[#C3F746] border border-[#C3F746]/30'
                           }`}
                         >
                           <option value="PENDING">Beklemede</option>
@@ -296,7 +296,7 @@ const AdminDashboard = () => {
                         <div className="flex space-x-2">
                           <button
                             onClick={() => deleteIssue(issue._id)}
-                            className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-full text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+                            className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-full text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-[#F7721A] focus:ring-offset-2 focus:ring-offset-[#161717] transition-colors duration-200"
                           >
                             Sil
                           </button>

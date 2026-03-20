@@ -69,9 +69,9 @@ const MapPage = () => {
       case 'PENDING':
         return '#ef4444'; // red
       case 'IN_PROGRESS':
-        return '#f59e0b'; // amber
+        return '#F7721A'; // neonOrange
       case 'RESOLVED':
-        return '#10b981'; // green
+        return '#C3F746'; // neonGreen
       default:
         return '#6b7280'; // gray
     }
@@ -127,10 +127,10 @@ const MapPage = () => {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center bg-[#0F1010]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Harita yükleniyor...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C3F746] mx-auto mb-4"></div>
+          <p className="text-gray-400">Harita yükleniyor...</p>
         </div>
       </div>
     );
@@ -138,29 +138,29 @@ const MapPage = () => {
 
   return (
     <div className="h-screen relative">
-      <div className="absolute top-4 left-4 z-10 bg-white rounded-lg shadow-lg p-4 max-w-sm">
-        <h1 className="text-xl font-bold text-gray-900 mb-2">🗺️ Sorun Haritası</h1>
-        <p className="text-sm text-gray-600 mb-3">
+      <div className="absolute top-4 left-4 z-10 bg-[#161717] rounded-[2rem] shadow-lg p-4 max-w-sm border border-[#2A2B2B]">
+        <h1 className="text-xl font-bold text-white mb-2">🗺️ Sorun Haritası</h1>
+        <p className="text-sm text-gray-400 mb-3">
           Toplam {validIssues.length} konumlu sorun gösteriliyor
         </p>
         
         <div className="space-y-2 text-xs">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-gray-700">Beklemede</span>
+            <span className="text-gray-300">Beklemede</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-            <span className="text-gray-700">İnceleniyor</span>
+            <div className="w-3 h-3 rounded-full bg-[#F7721A]"></div>
+            <span className="text-gray-300">İnceleniyor</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-gray-700">Çözüldü</span>
+            <div className="w-3 h-3 rounded-full bg-[#C3F746]"></div>
+            <span className="text-gray-300">Çözüldü</span>
           </div>
         </div>
 
         {userLocation && (
-          <div className="mt-3 pt-3 border-t border-gray-200">
+          <div className="mt-3 pt-3 border-t border-[#2A2B2B]">
             <p className="text-xs text-gray-500">
               📍 Konumunuz haritada gösteriliyor
             </p>
@@ -168,10 +168,10 @@ const MapPage = () => {
         )}
       </div>
 
-      <div className="absolute top-4 right-4 z-10 bg-white rounded-lg shadow-lg p-3">
+      <div className="absolute top-4 right-4 z-10 bg-[#161717] rounded-[2rem] shadow-lg p-3 border border-[#2A2B2B]">
         <button
           onClick={() => window.location.href = '/'}
-          className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          className="text-sm text-gray-400 hover:text-white transition-colors"
         >
           ← Ana Sayfa
         </button>
@@ -184,8 +184,8 @@ const MapPage = () => {
         className="z-0"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
         />
 
         {/* User location marker */}
@@ -193,7 +193,7 @@ const MapPage = () => {
           <Marker position={userLocation}>
             <Popup>
               <div className="text-center">
-                <p className="font-semibold text-blue-600">📍 Konumunuz</p>
+                <p className="font-semibold text-[#C3F746]">📍 Konumunuz</p>
                 <p className="text-xs text-gray-500">Burası sizsiniz</p>
               </div>
             </Popup>
@@ -209,33 +209,33 @@ const MapPage = () => {
           >
             <Popup>
               <div className="min-w-48">
-                <h3 className="font-semibold text-gray-900 mb-2">{issue.title}</h3>
+                <h3 className="font-semibold text-white mb-2">{issue.title}</h3>
                 
                 <div className="space-y-1 mb-3">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Kategori:</span>
-                    <span className="font-medium">{getCategoryText(issue.category)}</span>
+                    <span className="font-medium text-gray-300">{getCategoryText(issue.category)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Durum:</span>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      issue.status === 'PENDING' ? 'bg-red-100 text-red-800' :
-                      issue.status === 'IN_PROGRESS' ? 'bg-amber-100 text-amber-800' :
-                      'bg-green-100 text-green-800'
+                      issue.status === 'PENDING' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                      issue.status === 'IN_PROGRESS' ? 'bg-[#F7721A]/20 text-[#F7721A] border border-[#F7721A]/30' :
+                      'bg-[#C3F746]/20 text-[#C3F746] border border-[#C3F746]/30'
                     }`}>
                       {getStatusText(issue.status)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Bildiren:</span>
-                    <span className="font-medium">{issue.reporterId?.name || 'Bilinmeyen'}</span>
+                    <span className="font-medium text-gray-300">{issue.reporterId?.name || 'Bilinmeyen'}</span>
                   </div>
                 </div>
 
                 <Link
                   to={`/issues/${issue._id}`}
-                  className="block w-full bg-blue-600 hover:bg-blue-700 !text-white text-center py-2 px-4 rounded-lg text-sm font-medium transition-colors"
-                  style={{ color: 'white', textDecoration: 'none' }}
+                  className="block w-full bg-[#C3F746] hover:bg-[#a5d13b] !text-black text-center py-2 px-4 rounded-lg text-sm font-bold transition-colors"
+                  style={{ color: 'black', textDecoration: 'none' }}
                 >
                   Detaya Git →
                 </Link>

@@ -261,13 +261,13 @@ const IssueDetail = () => {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-6"></div>
-          <div className="card">
-            <div className="h-4 bg-gray-200 rounded w-full mb-3"></div>
-            <div className="h-4 bg-gray-200 rounded w-full mb-3"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+        <div className="bg-[#161717] rounded-[2rem] shadow-xl p-8">
+          <div className="h-8 bg-[#2A2B2B] rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-[#2A2B2B] rounded w-1/2 mb-6"></div>
+          <div className="bg-[#161717] rounded-[2rem] p-6">
+            <div className="h-4 bg-[#2A2B2B] rounded w-full mb-3"></div>
+            <div className="h-4 bg-[#2A2B2B] rounded w-full mb-3"></div>
+            <div className="h-4 bg-[#2A2B2B] rounded w-2/3"></div>
           </div>
         </div>
       </div>
@@ -277,9 +277,9 @@ const IssueDetail = () => {
   if (!issue) {
     return (
       <div className="max-w-4xl mx-auto text-center py-12">
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Sorun bulunamadı</h3>
+        <h3 className="text-lg font-medium text-white mb-2">Sorun bulunamadı</h3>
         <p className="text-gray-500 mb-6">Aradığınız sorun mevcut değil veya silinmiş olabilir.</p>
-        <button onClick={() => navigate('/')} className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        <button onClick={() => navigate('/')} className="bg-[#C3F746] hover:bg-[#a5d13b] text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200">
           Ana Sayfaya Dön
         </button>
       </div>
@@ -295,16 +295,16 @@ const IssueDetail = () => {
       <div className="mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-sm"
+          className="bg-[#0F1010] text-gray-400 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm border border-[#2A2B2B]"
         >
           ← Geri Dön
         </button>
       </div>
 
-      <div className="card mb-6">
+      <div className="bg-[#161717] rounded-[2rem] p-8 border border-[#2A2B2B] shadow-2xl mb-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{issue.title}</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">{issue.title}</h1>
             <div className="flex items-center gap-3 mb-4">
               {getCategoryBadge(issue.category)}
               {getStatusBadge(issue.status)}
@@ -358,12 +358,12 @@ const IssueDetail = () => {
             </div>
             
             {canEdit && (
-              <div className="flex items-center space-x-2 border-l border-gray-200 pl-4">
+              <div className="flex items-center space-x-2 border-l border-[#2A2B2B] pl-4">
                 <select
                   value={issue.status}
                   onChange={(e) => handleStatusChange(e.target.value)}
                   disabled={statusLoading}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+                  className="w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 text-sm bg-[#0F1010] text-gray-200"
                 >
                   <option value="PENDING">Beklemede</option>
                   <option value="IN_PROGRESS">İnceleniyor</option>
@@ -392,13 +392,24 @@ const IssueDetail = () => {
           </div>
         </div>
 
+        {/* Fotoğraf Gösterimi */}
+        {issue.imageUrl && issue.imageUrl !== 'no-photo.jpg' && (
+          <div className="mb-6">
+            <img 
+              src={`http://localhost:5000${issue.imageUrl}`} 
+              alt={issue.title}
+              className="w-full max-w-2xl mx-auto rounded-2xl border border-[#2A2B2B] object-contain"
+            />
+          </div>
+        )}
+
         <div className="prose max-w-none mb-6">
-          <p className="text-gray-700 whitespace-pre-wrap">{issue.description}</p>
+          <p className="text-gray-300 whitespace-pre-wrap">{issue.description}</p>
         </div>
 
         {/* Yorumlar Bölümü */}
-        <div className="border-t border-gray-200 pt-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Yorumlar ({issue.comments?.length || 0})</h3>
+        <div className="border-t border-[#2A2B2B] pt-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Yorumlar ({issue.comments?.length || 0})</h3>
           
           {/* Yorum Ekleme Formu */}
           {isAuthenticated && (
@@ -414,7 +425,7 @@ const IssueDetail = () => {
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] resize-none bg-[#0F1010] text-gray-200"
                     placeholder="Yorumunuzu yazın..."
                     disabled={commentLoading}
                   />
@@ -422,7 +433,7 @@ const IssueDetail = () => {
                     <button
                       type="submit"
                       disabled={commentLoading || !commentText.trim()}
-                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
+                      className="bg-[#C3F746] hover:bg-[#a5d13b] disabled:bg-gray-600 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-[#C3F746] focus:ring-offset-2 text-sm"
                     >
                       {commentLoading ? (
                         <span className="flex items-center">
@@ -456,11 +467,11 @@ const IssueDetail = () => {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium text-gray-900">{comment.user?.name || 'Bilinmeyen Kullanıcı'}</span>
+                      <span className="font-medium text-white">{comment.user?.name || 'Bilinmeyen Kullanıcı'}</span>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         comment.user?.role === 'admin' 
-                          ? 'bg-red-100 text-red-800' 
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
+                          : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
                       }`}>
                         {comment.user?.role === 'admin' ? 'Admin' : 'Kullanıcı'}
                       </span>
@@ -474,7 +485,7 @@ const IssueDetail = () => {
                         })}
                       </span>
                     </div>
-                    <p className="text-gray-700 mt-1 whitespace-pre-wrap">{comment.text}</p>
+                    <p className="text-gray-300 mt-1 whitespace-pre-wrap">{comment.text}</p>
                   </div>
                 </div>
               ))
@@ -490,15 +501,15 @@ const IssueDetail = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-medium text-gray-900 mb-2">Bildiren</h3>
-            <p className="text-gray-600">{issue.reporterId?.name || 'Bilinmeyen Kullanıcı'}</p>
+          <div className="bg-[#0F1010] p-4 rounded-lg border border-[#2A2B2B]">
+            <h3 className="font-medium text-white mb-2">Bildiren</h3>
+            <p className="text-gray-400">{issue.reporterId?.name || 'Bilinmeyen Kullanıcı'}</p>
             <p className="text-sm text-gray-500">{issue.reporterId?.email || 'Bilinmeyen E-posta'}</p>
           </div>
           
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-medium text-gray-900 mb-2">Tarih</h3>
-            <p className="text-gray-600">{formatDate(issue.createdAt)}</p>
+          <div className="bg-[#0F1010] p-4 rounded-lg border border-[#2A2B2B]">
+            <h3 className="font-medium text-white mb-2">Tarih</h3>
+            <p className="text-gray-400">{formatDate(issue.createdAt)}</p>
             {issue.updatedAt && issue.updatedAt !== issue.createdAt && (
               <p className="text-sm text-gray-500">Güncellenme: {formatDate(issue.updatedAt)}</p>
             )}
@@ -507,9 +518,9 @@ const IssueDetail = () => {
 
         {issue.location && (
           <div className="mb-6">
-            <h3 className="font-medium text-gray-900 mb-2">Konum</h3>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-gray-600 mb-2">
+            <h3 className="font-medium text-white mb-2">Konum</h3>
+            <div className="bg-[#0F1010] p-4 rounded-lg border border-[#2A2B2B]">
+              <p className="text-gray-400 mb-2">
                 Enlem: {issue.location?.lat?.toFixed(6)}, Boylam: {issue.location?.lng?.toFixed(6)}
               </p>
               <div className="flex space-x-2">
@@ -517,14 +528,14 @@ const IssueDetail = () => {
                   href={getMapUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm"
                 >
                   Haritada Aç
                 </a>
                 <Link
                   to="/map"
                   state={{ center: [issue.location.lat, issue.location.lng] }}
-                  className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm"
+                  className="bg-[#C3F746] hover:bg-[#a5d13b] text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200 text-sm shadow-[0_0_15px_rgba(195,247,70,0.3)]"
                 >
                   🗺️ Haritada Göster
                 </Link>
@@ -535,8 +546,8 @@ const IssueDetail = () => {
 
         {issue.image && (
           <div className="mb-6">
-            <h3 className="font-medium text-gray-900 mb-2">Görsel</h3>
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="font-medium text-white mb-2">Görsel</h3>
+            <div className="bg-[#0F1010] p-4 rounded-2xl border border-[#2A2B2B]">
               <img 
                 src={issue.image} 
                 alt={issue.title}

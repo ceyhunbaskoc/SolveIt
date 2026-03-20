@@ -75,7 +75,7 @@ const Leaderboard = () => {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Liderlik tablosu yükleniyor...</p>
+          <p className="mt-4 text-gray-400">Liderlik tablosu yükleniyor...</p>
         </div>
       </div>
     );
@@ -84,14 +84,14 @@ const Leaderboard = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">🏆 Liderlik Tablosu</h1>
-        <p className="text-gray-600">En aktif vatandaşlarımızın XP sıralaması</p>
+        <h1 className="text-4xl font-bold text-white mb-2">🏆 Liderlik Tablosu</h1>
+        <p className="text-gray-400">En aktif vatandaşlarımızın XP sıralaması</p>
       </div>
 
       {leaderboard.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="text-center py-12 bg-[#161717] rounded-lg shadow-sm border border-[#2A2B2B]">
           <div className="text-gray-400 text-6xl mb-4">🏆</div>
-          <p className="text-gray-600 text-lg">Henüz kullanıcı bulunmuyor</p>
+          <p className="text-gray-400 text-lg">Henüz kullanıcı bulunmuyor</p>
           <p className="text-gray-500 text-sm mt-2">İlk sıradaki olmak için sorun bildirin!</p>
         </div>
       ) : (
@@ -160,9 +160,9 @@ const Leaderboard = () => {
       )}
 
       <div className="mt-8 text-center">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">XP Nasıl Kazanılır?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-blue-800">
+        <div className="bg-[#161717] border border-[#2A2B2B] rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-white mb-2">XP Nasıl Kazanılır?</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-300">
             <div className="flex items-center space-x-2">
               <span className="text-xl">📝</span>
               <span>Yeni sorun bildir: <strong>+10 XP</strong></span>

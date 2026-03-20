@@ -167,9 +167,9 @@ const Profile = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Giriş Yapmalısınız</h3>
+        <h3 className="text-lg font-medium text-white mb-2">Giriş Yapmalısınız</h3>
         <p className="text-gray-500 mb-6">Profilinizi düzenlemek için giriş yapmalısınız.</p>
-        <a href="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        <a href="/login" className="bg-[#C3F746] hover:bg-[#a5d13b] text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200">
           Giriş Yap
         </a>
       </div>
@@ -180,16 +180,16 @@ const Profile = () => {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Profil Ayarları</h1>
-          <p className="text-gray-600">Kişisel bilgilerinizi yönetin</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Profil Ayarları</h1>
+          <p className="text-gray-400">Kişisel bilgilerinizi yönetin</p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 animate-pulse">
+        <div className="bg-[#161717] rounded-[2rem] shadow-sm border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 animate-pulse">
           <div className="space-y-4">
             {[1, 2, 3, 4].map((i) => (
               <div key={i}>
-                <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-[#2A2B2B] rounded w-24 mb-2"></div>
+                <div className="h-10 bg-[#2A2B2B] rounded"></div>
               </div>
             ))}
           </div>
@@ -201,8 +201,8 @@ const Profile = () => {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Profil Ayarları</h1>
-        <p className="text-gray-600">Kişisel bilgilerinizi yönetin</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Profil Ayarları</h1>
+        <p className="text-gray-400">Kişisel bilgilerinizi yönetin</p>
       </div>
 
       {/* XP ve Seviye Kartı */}
@@ -247,10 +247,10 @@ const Profile = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
+        <div className="bg-[#161717] rounded-[2rem] shadow-sm border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300">
           <div className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
                 Ad Soyad <span className="text-red-500">*</span>
               </label>
               <input
@@ -259,7 +259,7 @@ const Profile = () => {
                 type="text"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.name ? 'border-red-500' : ''}`}
+                className={`w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 bg-[#0F1010] text-gray-200 ${errors.name ? 'border-red-500' : ''}`}
                 placeholder="Adınız Soyadınız"
               />
               {errors.name && (
@@ -268,7 +268,7 @@ const Profile = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
                 E-posta Adresi <span className="text-red-500">*</span>
               </label>
               <input
@@ -277,7 +277,7 @@ const Profile = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.email ? 'border-red-500' : ''}`}
+                className={`w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 bg-[#0F1010] text-gray-200 ${errors.email ? 'border-red-500' : ''}`}
                 placeholder="ornek@email.com"
               />
               {errors.email && (
@@ -289,7 +289,7 @@ const Profile = () => {
             </div>
 
             <div>
-              <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="department" className="block text-sm font-medium text-gray-300 mb-1">
                 Departman/Birim
               </label>
               <input
@@ -298,7 +298,7 @@ const Profile = () => {
                 type="text"
                 value={formData.department}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 bg-[#0F1010] text-gray-200"
                 placeholder="Örn: Bilgi İşlem Daire Başkanlığı"
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -307,7 +307,7 @@ const Profile = () => {
             </div>
 
             <div>
-              <label htmlFor="contactInfo" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="contactInfo" className="block text-sm font-medium text-gray-300 mb-1">
                 İletişim Bilgileri
               </label>
               <textarea
@@ -316,7 +316,7 @@ const Profile = () => {
                 rows={3}
                 value={formData.contactInfo}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                className="w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 resize-none bg-[#0F1010] text-gray-200"
                 placeholder="Telefon numarası, dahili gibi ek iletişim bilgileriniz"
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -326,42 +326,42 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 bg-gray-50">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Hesap Bilgileri</h3>
+        <div className="bg-[#161717] rounded-[2rem] p-8 border border-[#2A2B2B] shadow-2xl">
+          <h3 className="text-lg font-medium text-white mb-4">Hesap Bilgileri</h3>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Kayıt Tarihi:</span>
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-gray-500">Kayıt Tarihi:</span>
+              <span className="text-sm text-gray-100">
                 {currentUser ? new Date(currentUser.createdAt).toLocaleDateString('tr-TR') : 'Bilinmiyor'}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Kullanıcı Adı:</span>
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-gray-500">Kullanıcı Adı:</span>
+              <span className="text-sm text-gray-100">
                 {currentUser?.name || 'Bilinmiyor'}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">E-posta:</span>
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-gray-500">E-posta:</span>
+              <span className="text-sm text-gray-100">
                 {currentUser?.email || 'Bilinmiyor'}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Kullanıcı Rolü:</span>
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-gray-500">Kullanıcı Rolü:</span>
+              <span className="text-sm text-gray-100">
                 {currentUser?.role === 'admin' ? 'Yönetici' : 'Kullanıcı'}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Deneyim Puanı (XP):</span>
-              <span className="text-sm font-bold text-blue-600">
+              <span className="text-sm text-gray-500">Deneyim Puanı (XP):</span>
+              <span className="text-sm font-bold text-[#C3F746]">
                 {currentXp} XP
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Hesap Durumu:</span>
-              <span className="bg-green-100 text-green-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">Aktif</span>
+              <span className="text-sm text-gray-500">Hesap Durumu:</span>
+              <span className="bg-[#C3F746]/20 text-[#C3F746] border border-[#C3F746]/30 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">Aktif</span>
             </div>
           </div>
         </div>
@@ -370,14 +370,14 @@ const Profile = () => {
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            className="bg-[#0F1010] hover:bg-[#1a1a1a] text-gray-400 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-[#C3F746] focus:ring-offset-2 border border-[#2A2B2B]"
           >
             İptal
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#C3F746] hover:bg-[#a5d13b] text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-[#C3F746] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center justify-center">

@@ -9,134 +9,133 @@ const Layout = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <Link to="/" className="text-2xl font-bold text-blue-600">
-                  SolveIt
-                </Link>
-              </div>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+    <div className="flex h-screen bg-[#0F1010] text-gray-200 overflow-hidden">
+      {/* Sidebar */}
+      <div className="w-64 bg-[#161717] m-4 rounded-[2rem] p-6 flex flex-col justify-between shadow-2xl">
+        {/* Logo/Başlık */}
+        <div>
+          <Link to="/" className="block mb-8">
+            <img 
+              src="/logo.png" 
+              alt="SolveIt Logo" 
+              className="h-30 w-auto object-contain shadow-[0_0_20px_rgba(195,247,70,0.15)]" 
+            />
+          </Link>
+          
+          {/* Menü Linkleri */}
+          {isAuthenticated && (
+            <nav className="space-y-2">
+              <Link
+                to="/"
+                className={`flex items-center gap-3 rounded-xl p-3 mb-2 transition-all ${
+                  isActive('/')
+                    ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#2A2B2B]'
+                }`}
+              >
+                Ana Sayfa
+              </Link>
+              <Link
+                to="/report"
+                className={`flex items-center gap-3 rounded-xl p-3 mb-2 transition-all ${
+                  isActive('/report')
+                    ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#2A2B2B]'
+                }`}
+              >
+                Yeni Bildirim
+              </Link>
+              <Link
+                to="/my-issues"
+                className={`flex items-center gap-3 rounded-xl p-3 mb-2 transition-all ${
+                  isActive('/my-issues')
+                    ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#2A2B2B]'
+                }`}
+              >
+                Bildirimlerim
+              </Link>
+              <Link
+                to="/leaderboard"
+                className={`flex items-center gap-3 rounded-xl p-3 mb-2 transition-all ${
+                  isActive('/leaderboard')
+                    ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#2A2B2B]'
+                }`}
+              >
+                🏆 Liderler
+              </Link>
+              <Link
+                to="/map"
+                className={`flex items-center gap-3 rounded-xl p-3 mb-2 transition-all ${
+                  isActive('/map')
+                    ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#2A2B2B]'
+                }`}
+              >
+                🗺️ Harita
+              </Link>
+              {user?.role === 'admin' && (
                 <Link
-                  to="/"
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    isActive('/')
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  to="/admin"
+                  className={`flex items-center gap-3 rounded-xl p-3 mb-2 transition-all ${
+                    isActive('/admin')
+                      ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                      : 'text-gray-400 hover:text-white hover:bg-[#2A2B2B]'
                   }`}
                 >
-                  Ana Sayfa
+                  Yönetici Paneli
                 </Link>
-                {isAuthenticated && (
-                  <>
-                    <Link
-                      to="/report"
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                        isActive('/report')
-                          ? 'border-blue-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                      }`}
-                    >
-                      Yeni Bildirim
-                    </Link>
-                    <Link
-                      to="/my-issues"
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                        isActive('/my-issues')
-                          ? 'border-blue-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                      }`}
-                    >
-                      Bildirimlerim
-                    </Link>
-                    <Link
-                      to="/leaderboard"
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                        isActive('/leaderboard')
-                          ? 'border-blue-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                      }`}
-                    >
-                      🏆 Liderler
-                    </Link>
-                    <Link
-                      to="/map"
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                        isActive('/map')
-                          ? 'border-blue-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                      }`}
-                    >
-                      🗺️ Harita
-                    </Link>
-                    {user?.role === 'admin' && (
-                      <Link
-                        to="/admin"
-                        className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                          isActive('/admin')
-                            ? 'border-blue-500 text-gray-900'
-                            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                        }`}
-                      >
-                        Yönetici Paneli
-                      </Link>
-                    )}
-                    <Link
-                      to="/profile"
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                        isActive('/profile')
-                          ? 'border-blue-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                      }`}
-                    >
-                      Profil
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center">
-              {isAuthenticated ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-700">
-                    Hoş geldin, {user?.name}
-                  </span>
-                  <button
-                    onClick={logout}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-sm"
-                  >
-                    Çıkış Yap
-                  </button>
-                </div>
-              ) : (
-                <div className="flex space-x-4">
-                  <Link
-                    to="/login"
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 text-sm"
-                  >
-                    Giriş Yap
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
-                  >
-                    Kayıt Ol
-                  </Link>
-                </div>
               )}
-            </div>
-          </div>
+              <Link
+                to="/profile"
+                className={`flex items-center gap-3 rounded-xl p-3 mb-2 transition-all ${
+                  isActive('/profile')
+                    ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#2A2B2B]'
+                }`}
+              >
+                Profil
+              </Link>
+            </nav>
+          )}
         </div>
-      </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <Outlet />
-        </div>
-      </main>
+        {/* Kullanıcı Bilgisi ve Çıkış */}
+        {isAuthenticated ? (
+          <div className="bg-[#0F1010] p-4 rounded-xl mt-auto">
+            <div className="text-sm text-gray-300 mb-3">
+              Hoş geldin, <span className="text-white font-medium">{user?.name}</span>
+            </div>
+            <button
+              onClick={logout}
+              className="w-full text-[#F7721A] hover:text-red-500 font-medium py-2 px-4 rounded-lg transition-all duration-200 text-sm"
+            >
+              Çıkış Yap
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <Link
+              to="/login"
+              className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center text-sm"
+            >
+              Giriş Yap
+            </Link>
+            <Link
+              to="/register"
+              className="block w-full bg-[#C3F746] hover:bg-green-500 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200 text-center text-sm"
+            >
+              Kayıt Ol
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Ana İçerik Alanı */}
+      <div className="flex-1 overflow-y-auto p-8">
+        <Outlet />
+      </div>
     </div>
   );
 };

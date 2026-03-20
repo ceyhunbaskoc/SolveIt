@@ -62,13 +62,13 @@ const Dashboard = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'beklemede':
-        return <span className="bg-yellow-100 text-yellow-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">Beklemede</span>;
+        return <span className="bg-[#F7721A]/20 text-[#F7721A] border border-[#F7721A]/30 px-3 py-1 rounded-full text-xs font-medium">Beklemede</span>;
       case 'inceleniyor':
-        return <span className="bg-blue-100 text-blue-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">İnceleniyor</span>;
+        return <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full text-xs font-medium">İnceleniyor</span>;
       case 'cozuldu':
-        return <span className="bg-green-100 text-green-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">Çözüldü</span>;
+        return <span className="bg-[#C3F746]/20 text-[#C3F746] border border-[#C3F746]/30 px-3 py-1 rounded-full text-xs font-medium">Çözüldü</span>;
       default:
-        return <span className="bg-gray-100 text-gray-800 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">{status}</span>;
+        return <span className="bg-gray-500/20 text-gray-400 border border-gray-500/30 px-3 py-1 rounded-full text-xs font-medium">{status}</span>;
     }
   };
 
@@ -203,18 +203,18 @@ const Dashboard = () => {
         <div className="mb-6">
           <div className="flex flex-wrap gap-2">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="h-8 w-20 bg-gray-200 rounded-full animate-pulse"></div>
+              <div key={i} className="h-8 w-20 bg-[#161717] border-[#2A2B2B] rounded-full animate-pulse"></div>
             ))}
           </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+            <div key={i} className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-6 hover:shadow-xl transition-all duration-300 animate-pulse">
+              <div className="h-4 bg-[#2A2B2B] rounded w-3/4 mb-3"></div>
+              <div className="h-3 bg-[#2A2B2B] rounded w-1/2 mb-2"></div>
+              <div className="h-3 bg-[#2A2B2B] rounded w-full mb-2"></div>
+              <div className="h-3 bg-[#2A2B2B] rounded w-2/3"></div>
             </div>
           ))}
         </div>
@@ -225,8 +225,8 @@ const Dashboard = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Kampüs ve Şehir Sorunları</h1>
-        <p className="text-gray-600">Topluluğumuzdaki sorunları görün ve katkıda bulunun</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Kampüs ve Şehir Sorunları</h1>
+        <p className="text-gray-400">Topluluğumuzdaki sorunları görün ve katkıda bulunun</p>
       </div>
 
       <div className="mb-6">
@@ -237,8 +237,8 @@ const Dashboard = () => {
               onClick={() => handleCategoryClick(category.id)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === category.id
-                  ? `${category.color} text-white`
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#C3F746] text-black font-bold shadow-[0_0_15px_rgba(195,247,70,0.3)]'
+                  : 'bg-[#161717] text-gray-400 hover:text-white border border-[#2A2B2B]'
               }`}
             >
               {category.name}
@@ -254,7 +254,7 @@ const Dashboard = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Henüz sorun bildirilmedi</h3>
+          <h3 className="text-lg font-medium text-white mb-2">Henüz sorun bildirilmedi</h3>
           <p className="text-gray-500 mb-6">
             {selectedCategory === 'all' 
               ? 'Topluluğumuzda henüz bir sorun bildirilmemiş.' 
@@ -262,7 +262,7 @@ const Dashboard = () => {
           </p>
           <Link
             to="/report"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="bg-[#C3F746] hover:bg-green-500 text-black font-medium py-2 px-4 rounded-lg transition-colors duration-200"
           >
             İlk Sorunu Bildir
           </Link>
@@ -275,9 +275,9 @@ const Dashboard = () => {
               to={`/issues/${issue._id}`}
               className="block"
             >
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 cursor-pointer">
+              <div className="bg-[#161717] rounded-[2rem] p-6 border border-[#2A2B2B] hover:border-[#C3F746] hover:-translate-y-1 transition-all duration-300 shadow-xl">
                 <div className="mb-3">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                  <h3 className="text-lg font-semibold text-gray-100 mb-2 line-clamp-2">
                     {issue.title}
                   </h3>
                   <div className="flex items-center gap-2 mb-2">
@@ -286,27 +286,34 @@ const Dashboard = () => {
                   </div>
                 </div>
                 
-                <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+                <p className="text-gray-400 text-sm mb-3 line-clamp-3">
                   {issue.description}
                 </p>
                 
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{formatDate(issue.createdAt)}</span>
-                  {issue.location && issue.location.lat && (
-                    <span className="text-sm text-gray-500 flex items-center ml-2">
-                      <span className="mr-1">📍</span> Konum belirtilmiş
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {issue.location && issue.location.lat && (
+                      <span className="text-sm text-gray-500 flex items-center">
+                        <span className="mr-1">📍</span> Konum eklenmiş
+                      </span>
+                    )}
+                    {issue.imageUrl && issue.imageUrl !== 'no-photo.jpg' && (
+                      <span className="text-xs text-[#C3F746] font-medium flex items-center">
+                        <span className="mr-1">📷</span> Fotoğraf eklendi
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                <div className="flex items-center justify-between mt-3 pt-4 mt-4 border-t border-[#2A2B2B]">
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={(e) => handleUpvote(issue._id, e)}
-                      className={`flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-xl text-xs font-medium transition-colors border border-[#2A2B2B] ${
                         hasUpvoted(issue)
-                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          ? 'bg-[#C3F746]/10 text-[#C3F746] border border-[#C3F746]/30'
+                          : 'bg-[#0F1010] text-gray-400 hover:text-white'
                       }`}
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -317,10 +324,10 @@ const Dashboard = () => {
                     
                     <button
                       onClick={(e) => handleDownvote(issue._id, e)}
-                      className={`flex items-center space-x-1 px-2 py-1 rounded-md text-xs font-medium transition-colors ${
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-xl text-xs font-medium transition-colors border border-[#2A2B2B] ${
                         hasDownvoted(issue)
-                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          ? 'bg-[#F7721A]/10 text-[#F7721A] border border-[#F7721A]/30'
+                          : 'bg-[#0F1010] text-gray-400 hover:text-white'
                       }`}
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -331,12 +338,12 @@ const Dashboard = () => {
                   </div>
                   
                   <div className="flex items-center space-x-1 text-sm font-medium">
-                    <span className={`px-2 py-1 rounded-full ${
+                    <span className={`bg-[#0F1010] text-white px-3 py-1 rounded-xl border border-[#2A2B2B] ${
                       getScore(issue) > 0 
-                        ? 'bg-green-100 text-green-700'
+                        ? 'text-[#C3F746]'
                         : getScore(issue) < 0
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-gray-100 text-gray-700'
+                        ? 'text-[#F7721A]'
+                        : ''
                     }`}>
                       {getScore(issue) > 0 && '+'}{getScore(issue)}
                     </span>

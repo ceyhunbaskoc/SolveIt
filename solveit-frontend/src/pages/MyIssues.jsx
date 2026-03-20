@@ -191,9 +191,9 @@ const MyIssues = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Giriş Yapmalısınız</h3>
+        <h3 className="text-lg font-medium text-white mb-2">Giriş Yapmalısınız</h3>
         <p className="text-gray-500 mb-6">Bildirimlerinizi görmek için giriş yapmalısınız.</p>
-        <Link to="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        <Link to="/login" className="bg-[#C3F746] hover:bg-[#a5d13b] text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200">
           Giriş Yap
         </Link>
       </div>
@@ -204,26 +204,26 @@ const MyIssues = () => {
     return (
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Bildirimlerim</h1>
-          <p className="text-gray-600">Yaptığınız tüm sorun bildirimleri</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Bildirimlerim</h1>
+          <p className="text-gray-400">Yaptığınız tüm sorun bildirimleri</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-full"></div>
+            <div key={i} className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 animate-pulse">
+              <div className="h-8 bg-[#2A2B2B] rounded w-16 mb-2"></div>
+              <div className="h-4 bg-[#2A2B2B] rounded w-full"></div>
             </div>
           ))}
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+            <div key={i} className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 animate-pulse">
+              <div className="h-4 bg-[#2A2B2B] rounded w-3/4 mb-3"></div>
+              <div className="h-3 bg-[#2A2B2B] rounded w-1/2 mb-2"></div>
+              <div className="h-3 bg-[#2A2B2B] rounded w-full mb-2"></div>
+              <div className="h-3 bg-[#2A2B2B] rounded w-2/3"></div>
             </div>
           ))}
         </div>
@@ -242,21 +242,21 @@ const MyIssues = () => {
 
       {issues.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 text-center">
-            <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-            <div className="text-sm text-gray-600">Toplam Bildirim</div>
+          <div className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="text-2xl font-bold text-white">{stats.total}</div>
+            <div className="text-sm text-gray-400">Toplam Bildirim</div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 text-center">
-            <div className="text-2xl font-bold text-yellow-600">{stats.bekleyen}</div>
-            <div className="text-sm text-gray-600">Beklemede</div>
+          <div className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="text-2xl font-bold text-[#F7721A]">{stats.bekleyen}</div>
+            <div className="text-sm text-gray-400">Beklemede</div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 text-center">
-            <div className="text-2xl font-bold text-blue-600">{stats.incelenen}</div>
-            <div className="text-sm text-gray-600">İnceleniyor</div>
+          <div className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="text-2xl font-bold text-blue-400">{stats.incelenen}</div>
+            <div className="text-sm text-gray-400">İnceleniyor</div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 text-center">
-            <div className="text-2xl font-bold text-green-600">{stats.cozulen}</div>
-            <div className="text-sm text-gray-600">Çözüldü</div>
+          <div className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 text-center">
+            <div className="text-2xl font-bold text-[#C3F746]">{stats.cozulen}</div>
+            <div className="text-sm text-gray-400">Çözüldü</div>
           </div>
         </div>
       )}
@@ -268,21 +268,21 @@ const MyIssues = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Henüz bir sorun bildirmediniz</h3>
+          <h3 className="text-lg font-medium text-white mb-2">Henüz bir sorun bildirmediniz</h3>
           <p className="text-gray-500 mb-6">Topluluğumuzdaki sorunları bildirmek için ilk adımı atın.</p>
-          <Link to="/report" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          <Link to="/report" className="bg-[#C3F746] hover:bg-[#a5d13b] text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200">
             İlk Sorunu Bildir
           </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {issues.map((issue) => (
-            <div key={issue._id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 relative group">
+            <div key={issue._id} className="bg-[#161717] rounded-[2rem] border border-[#2A2B2B] p-4 hover:shadow-xl transition-all duration-300 relative group">
               <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                 <select
                   value={issue.status}
                   onChange={(e) => handleStatusChange(issue._id, e.target.value)}
-                  className="text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="text-xs border border-[#2A2B2B] rounded px-2 py-1 focus:outline-none focus:ring-[#C3F746] bg-[#0F1010] text-gray-200"
                 >
                   <option value="PENDING">Beklemede</option>
                   <option value="IN_PROGRESS">İnceleniyor</option>
@@ -291,7 +291,7 @@ const MyIssues = () => {
                 <button
                   onClick={() => handleDelete(issue._id)}
                   disabled={deleteLoading === issue._id}
-                  className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 p-2 text-xs"
+                  className="bg-[#0F1010] text-red-500 hover:bg-red-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 p-2 text-xs border border-[#2A2B2B]"
                   title="Sil"
                 >
                   {deleteLoading === issue._id ? (
@@ -309,7 +309,7 @@ const MyIssues = () => {
               
               <Link to={`/issues/${issue._id}`} className="block">
                 <div className="mb-3">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                  <h3 className="text-lg font-semibold text-gray-100 mb-2 line-clamp-2">
                     {issue.title}
                   </h3>
                   <div className="flex items-center gap-2 mb-2">
@@ -318,23 +318,30 @@ const MyIssues = () => {
                   </div>
                 </div>
                 
-                <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+                <p className="text-gray-400 text-sm mb-3 line-clamp-3">
                   {issue.description}
                 </p>
                 
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{formatDate(issue.createdAt)}</span>
-                  {issue.location && issue.location.lat && (
-                    <span className="text-sm text-gray-500 flex items-center ml-2">
-                      <span className="mr-1">📍</span> Konum belirtilmiş
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {issue.location && issue.location.lat && (
+                      <span className="text-sm text-gray-500 flex items-center">
+                        <span className="mr-1">📍</span> Konum belirtilmiş
+                      </span>
+                    )}
+                    {issue.imageUrl && issue.imageUrl !== 'no-photo.jpg' && (
+                      <span className="text-xs text-[#C3F746] font-medium flex items-center">
+                        <span className="mr-1">📷</span> Fotoğraf eklendi
+                      </span>
+                    )}
+                  </div>
                 </div>
                 
-                {issue.image && (
+                {issue.imageUrl && issue.imageUrl !== 'no-photo.jpg' && (
                   <div className="mt-3">
                     <img 
-                      src={issue.image} 
+                      src={`http://localhost:5000${issue.imageUrl}`}
                       alt={issue.title}
                       className="w-full h-32 object-cover rounded-md"
                     />

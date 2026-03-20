@@ -205,15 +205,15 @@ const ReportIssue = () => {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Yeni Sorun Bildir</h1>
-        <p className="text-gray-600">Topluluğumuzdaki sorunları bildirerek çözüm sürecine katkıda bulunun</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Yeni Sorun Bildir</h1>
+        <p className="text-gray-400">Topluluğumuzdaki sorunları bildirerek çözüm sürecine katkıda bulunun</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-[#161717] rounded-[2rem] shadow-sm border border-[#2A2B2B] p-4">
           <div className="space-y-4">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-1">
                 Başlık <span className="text-red-500">*</span>
               </label>
               <input
@@ -222,7 +222,7 @@ const ReportIssue = () => {
                 type="text"
                 value={formData.title}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.title ? 'border-red-500' : ''}`}
+                className={`w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 bg-[#0F1010] text-gray-200 ${errors.title ? 'border-red-500' : ''}`}
                 placeholder="Sorunun kısa ve açık bir başlığını girin"
               />
               {errors.title && (
@@ -234,7 +234,7 @@ const ReportIssue = () => {
             </div>
 
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-1">
                 Kategori <span className="text-red-500">*</span>
               </label>
               <select
@@ -242,7 +242,7 @@ const ReportIssue = () => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 bg-[#0F1010] text-gray-200"
               >
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
@@ -253,7 +253,7 @@ const ReportIssue = () => {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">
                 Açıklama <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -262,7 +262,7 @@ const ReportIssue = () => {
                 rows={5}
                 value={formData.description}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${errors.description ? 'border-red-500' : ''}`}
+                className={`w-full px-3 py-2 border border-[#2A2B2B] rounded-lg focus:outline-none focus:ring-[#C3F746] focus:border-[#C3F746] transition-all duration-200 resize-none bg-[#0F1010] text-gray-200 ${errors.description ? 'border-red-500' : ''}`}
                 placeholder="Sorunu detaylı bir şekilde açıklayın. Ne oldu, nerede ve ne zaman?"
               />
               {errors.description && (
@@ -283,7 +283,7 @@ const ReportIssue = () => {
                     type="button"
                     onClick={getCurrentLocation}
                     disabled={locationLoading}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 w-full disabled:opacity-50"
+                    className="bg-[#0F1010] hover:bg-[#1a1a1a] text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-[#C3F746] focus:ring-offset-2 w-full disabled:opacity-50 border border-[#2A2B2B]"
                   >
                     {locationLoading ? (
                       <span className="flex items-center justify-center">
@@ -380,14 +380,14 @@ const ReportIssue = () => {
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            className="bg-[#0F1010] hover:bg-[#1a1a1a] text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-[#C3F746] focus:ring-offset-2 border border-[#2A2B2B]"
           >
             İptal
           </button>
           <button
             type="submit"
             disabled={!isFormValid || loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#C3F746] hover:bg-[#a5d13b] text-black font-bold py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-[#C3F746] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center justify-center">

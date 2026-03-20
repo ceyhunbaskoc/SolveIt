@@ -4,8 +4,18 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        darkbg: '#0F1010',
+        darkcard: '#161717',
+        neonGreen: '#C3F746',
+        neonOrange: '#F7721A',
+      },
+      borderRadius: {
+        'dashboard': '2rem',
+      },
       animation: {
         'shake': 'shake 0.5s ease-in-out',
         'fade-in': 'fadeIn 0.3s ease-in-out',

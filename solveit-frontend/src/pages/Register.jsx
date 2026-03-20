@@ -117,17 +117,17 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#0F1010] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Yeni Hesap Oluşturun
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-400">
             veya{' '}
             <Link
               to="/login"
-              className="font-medium text-primary-600 hover:text-primary-500"
+              className="font-medium text-[#C3F746] hover:text-white"
             >
               mevcut hesabınıza giriş yapın
             </Link>
@@ -135,7 +135,7 @@ const Register = () => {
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+          <div className="max-w-md w-full bg-[#161717] rounded-[2rem] p-8 border border-[#2A2B2B] shadow-2xl">
             {error && (
               <div className="mb-4 p-3 bg-error-50 border border-error-200 rounded-md">
                 <p className="text-sm text-error-600">{error}</p>
@@ -144,7 +144,7 @@ const Register = () => {
             
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="text-gray-400 text-sm mb-1 block">
                   Ad Soyad
                 </label>
                 <input
@@ -154,7 +154,7 @@ const Register = () => {
                   autoComplete="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`input-field ${errors.name ? 'border-error-500' : ''}`}
+                  className={`appearance-none relative block w-full px-4 py-3 border border-[#2A2B2B] bg-[#0F1010] text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C3F746] focus:border-transparent transition-colors sm:text-sm ${errors.name ? 'border-red-500' : ''}`}
                   placeholder="Adınız Soyadınız"
                 />
                 {errors.name && (
@@ -163,7 +163,7 @@ const Register = () => {
               </div>
               
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="text-gray-400 text-sm mb-1 block">
                   E-posta Adresi
                 </label>
                 <input
@@ -173,7 +173,7 @@ const Register = () => {
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`input-field ${errors.email ? 'border-error-500' : ''}`}
+                  className={`appearance-none relative block w-full px-4 py-3 border border-[#2A2B2B] bg-[#0F1010] text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C3F746] focus:border-transparent transition-colors sm:text-sm ${errors.email ? 'border-red-500' : ''}`}
                   placeholder="ornek@email.com"
                 />
                 {errors.email && (
@@ -182,7 +182,7 @@ const Register = () => {
               </div>
               
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="text-gray-400 text-sm mb-1 block">
                   Şifre
                 </label>
                 <input
@@ -192,7 +192,7 @@ const Register = () => {
                   autoComplete="new-password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`input-field ${errors.password ? 'border-error-500' : ''}`}
+                  className={`appearance-none relative block w-full px-4 py-3 border border-[#2A2B2B] bg-[#0F1010] text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C3F746] focus:border-transparent transition-colors sm:text-sm ${errors.password ? 'border-red-500' : ''}`}
                   placeholder="••••••••"
                 />
                 {formData.password && (
@@ -201,7 +201,7 @@ const Register = () => {
                       <span className="text-xs text-gray-500">Şifre gücü: {getPasswordStrengthText()}</span>
                       <span className="text-xs text-gray-500">{passwordStrength}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-[#2A2B2B] rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
                         style={{ width: `${passwordStrength}%` }}
@@ -215,7 +215,7 @@ const Register = () => {
               </div>
               
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="confirmPassword" className="text-gray-400 text-sm mb-1 block">
                   Şifre Tekrarı
                 </label>
                 <input
@@ -225,7 +225,7 @@ const Register = () => {
                   autoComplete="new-password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`input-field ${errors.confirmPassword ? 'border-error-500' : ''}`}
+                  className={`appearance-none relative block w-full px-4 py-3 border border-[#2A2B2B] bg-[#0F1010] text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C3F746] focus:border-transparent transition-colors sm:text-sm ${errors.confirmPassword ? 'border-red-500' : ''}`}
                   placeholder="••••••••"
                 />
                 {errors.confirmPassword && (
@@ -238,7 +238,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#C3F746] hover:bg-[#a5d13b] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#C3F746] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="flex items-center justify-center">
