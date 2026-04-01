@@ -28,11 +28,7 @@ const io = new Server(server, {
 app.set('socketio', io);
 
 // Middleware
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}));
+app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
@@ -49,7 +45,7 @@ app.use('/api/users', userRoutes);
 app.get('/', (req, res) => {
     res.status(200).json({ 
         success: true, 
-        message: "Civic Luminescence (SolveIt) REST API Başarıyla Çalışıyor! 🚀",
+        message: "Civic Luminescence (SolveIt) REST API Başarıyla Çalışıyor",
         version: "1.0.0"
     });
 });
