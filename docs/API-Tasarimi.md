@@ -29,7 +29,7 @@ servers:
     description: Canlı Sunucu (Production)
   - url: https://staging.solveit.com.tr/api
     description: Test Sunucusu (Staging)
-  - url: http://localhost:5000/api
+  - url: https://solveit-887w.onrender.com/api
 
 tags:
   - name: auth

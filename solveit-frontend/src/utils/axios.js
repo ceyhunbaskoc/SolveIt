@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Axios instance oluştur
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://solveit-887w.onrender.com/api',
 });
 
 // Request interceptor - Her isteğe token ekle

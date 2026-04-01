@@ -19,7 +19,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
@@ -28,7 +28,11 @@ const io = new Server(server, {
 app.set('socketio', io);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 

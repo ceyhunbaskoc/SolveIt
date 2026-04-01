@@ -15,7 +15,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const socket = io('http://localhost:5000');
+    const socket = io('https://solveit-887w.onrender.com');
     
     socket.on('statusUpdated', (data) => {
       console.log('Dashboard - Status updated:', data);
@@ -87,8 +87,8 @@ const Dashboard = () => {
     try {
       setLoading(true);
       const url = category === 'all' 
-        ? 'http://localhost:5000/api/issues'
-        : `http://localhost:5000/api/issues?category=${category}`;
+        ? 'https://solveit-887w.onrender.com/api/issues'
+        : `https://solveit-887w.onrender.com/api/issues?category=${category}`;
       
       const response = await api.get(url);
       setIssues(response.data.data || response.data);

@@ -86,7 +86,7 @@ const IssueDetail = () => {
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const socket = io('http://localhost:5000');
+    const socket = io('https://solveit-887w.onrender.com');
     
     socket.on('voteUpdated', (data) => {
       console.log('IssueDetail - Vote updated:', data);
@@ -396,7 +396,7 @@ const IssueDetail = () => {
         {issue.imageUrl && issue.imageUrl !== 'no-photo.jpg' && (
           <div className="mb-6">
             <img 
-              src={`http://localhost:5000${issue.imageUrl}`} 
+              src={`https://solveit-887w.onrender.com${issue.imageUrl}`} 
               alt={issue.title}
               className="w-full max-w-2xl mx-auto rounded-2xl border border-[#2A2B2B] object-contain"
             />

@@ -16,7 +16,7 @@
 
 ## Proje Linkleri
 
-- **REST API Adresi:** `http://localhost:5000/api` *(Geliştirme Ortamı)*
+- **REST API Adresi:** `https://solveit-887w.onrender.com/api` *(Geliştirme Ortamı)*
 - **Web Frontend Adresi:** `http://localhost:3000` *(Geliştirme Ortamı)*
 
 ---

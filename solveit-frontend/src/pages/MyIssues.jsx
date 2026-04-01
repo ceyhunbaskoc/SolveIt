@@ -15,7 +15,7 @@ const MyIssues = () => {
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const socket = io('http://localhost:5000');
+    const socket = io('https://solveit-887w.onrender.com');
     
     socket.on('statusUpdated', (data) => {
       console.log('MyIssues - Status updated:', data);
@@ -341,7 +341,7 @@ const MyIssues = () => {
                 {issue.imageUrl && issue.imageUrl !== 'no-photo.jpg' && (
                   <div className="mt-3">
                     <img 
-                      src={`http://localhost:5000${issue.imageUrl}`}
+                      src={`https://solveit-887w.onrender.com${issue.imageUrl}`}
                       alt={issue.title}
                       className="w-full h-32 object-cover rounded-md"
                     />

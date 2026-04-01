@@ -21,7 +21,7 @@ import api from './utils/axios';
 import toast from 'react-hot-toast';
 
 // Socket connection
-const socket = io('http://localhost:5000');
+const socket = io('https://solveit-887w.onrender.com');
 
 // Socket component
 function SocketProvider({ children }) {
