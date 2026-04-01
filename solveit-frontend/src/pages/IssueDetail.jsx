@@ -396,7 +396,7 @@ const IssueDetail = () => {
         {issue.imageUrl && issue.imageUrl !== 'no-photo.jpg' && (
           <div className="mb-6">
             <img 
-              src={`https://solveit-887w.onrender.com${issue.imageUrl}`} 
+              src={issue.imageUrl.startsWith('data:') ? issue.imageUrl : `https://solveit-887w.onrender.com${issue.imageUrl}`}
               alt={issue.title}
               className="w-full max-w-2xl mx-auto rounded-2xl border border-[#2A2B2B] object-contain"
             />

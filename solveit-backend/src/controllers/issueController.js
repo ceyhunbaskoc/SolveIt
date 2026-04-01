@@ -40,8 +40,11 @@ exports.createIssue = async (req, res) => {
             status: 'PENDING'
         };
 
+        // Memory storage için Base64 handling
         if (req.file) {
-            issueData.imageUrl = `/uploads/${req.file.filename}`;
+            const base64Image = req.file.buffer.toString('base64');
+            const dataUrl = `data:${req.file.mimetype};base64,${base64Image}`;
+            issueData.imageUrl = dataUrl;
         }
 
         const issue = await Issue.create(issueData);
@@ -51,6 +54,7 @@ exports.createIssue = async (req, res) => {
         
         res.status(201).json({ success: true, data: issue });
     } catch (error) {
+        console.error('Create issue error:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 };
