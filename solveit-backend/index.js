@@ -42,6 +42,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/issues', issueRoutes);
 app.use('/api/users', userRoutes);
 
+app.get('/', (req, res) => {
+    res.status(200).json({ 
+        success: true, 
+        message: "Civic Luminescence (SolveIt) REST API Başarıyla Çalışıyor! 🚀",
+        version: "1.0.0"
+    });
+});
+
 // Schedule cleanup - Her gün saat 00:00'da çalışır
 cron.schedule('0 0 * * *', () => {
   console.log('[CRON] Running daily cleanup of old resolved issues...');
