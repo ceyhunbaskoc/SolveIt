@@ -87,8 +87,8 @@ const Dashboard = () => {
     try {
       setLoading(true);
       const url = category === 'all' 
-        ? 'https://solveit-887w.onrender.com/api/issues'
-        : `https://solveit-887w.onrender.com/api/issues?category=${category}`;
+        ? '/issues'
+        : `/issues?category=${category}`;
       
       const response = await api.get(url);
       setIssues(response.data.data || response.data);

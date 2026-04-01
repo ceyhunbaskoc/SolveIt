@@ -102,7 +102,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: 'LOGIN_START' });
       
-      const response = await axios.post('https://solveit-887w.onrender.com/api/auth/login', {
+      const response = await api.post('/auth/login', {
         email,
         password
       });
@@ -138,7 +138,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: 'REGISTER_START' });
       
-      const response = await axios.post('https://solveit-887w.onrender.com/api/auth/register', {
+      const response = await api.post('/auth/register', {
         name,
         email,
         password

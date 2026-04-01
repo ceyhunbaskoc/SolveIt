@@ -179,8 +179,8 @@ const ReportIssue = () => {
         formDataToSend.append('image', formData.image);
       }
       
-      const response = await axios.post(
-        'https://solveit-887w.onrender.com/api/issues',
+      const response = await api.post(
+        '/issues',
         formDataToSend,
         {
           headers: {
