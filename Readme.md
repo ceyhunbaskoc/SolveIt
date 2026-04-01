@@ -16,8 +16,8 @@
 
 ## Proje Linkleri
 
-- **REST API Adresi:** `https://solveit-887w.onrender.com/api` *(Geliştirme Ortamı)*
-- **Web Frontend Adresi:** `http://localhost:3000` *(Geliştirme Ortamı)*
+- **REST API Adresi:** `https://solveit-887w.onrender.com/api`
+- **Web Frontend Adresi:** `solveit-frontend.vercel.app`
 
 ---
 

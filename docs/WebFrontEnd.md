@@ -1,6 +1,6 @@
 # Web Frontend Görev Dağılımı ve Prensipleri
 
-**Web Frontend Adresi:** `frontend.yazmuh.com`
+**Web Frontend Adresi:** `solveit-frontend.vercel.app`
 
 Bu dokümanda, SolveIt web uygulamasının kullanıcı arayüzü (UI) ve kullanıcı deneyimi (UX) mimarisinin genel kuralları ve ekip görev dağılımı listelenmektedir.
 
