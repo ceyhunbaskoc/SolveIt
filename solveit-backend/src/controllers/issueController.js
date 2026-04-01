@@ -26,6 +26,9 @@ exports.getAllIssues = async (req, res) => {
 // POST: Create New Issue
 exports.createIssue = async (req, res) => {
     try {
+        console.log('Request body:', req.body);
+        console.log('Request file:', req.file);
+        
         let locationData = req.body.location;
         if (typeof locationData === 'string') {
             locationData = JSON.parse(locationData);
@@ -40,12 +43,14 @@ exports.createIssue = async (req, res) => {
             status: 'PENDING'
         };
 
-        // Memory storage için Base64 handling
+        // Memory storage için Base64 handling (sadece resim varsa)
         if (req.file) {
             const base64Image = req.file.buffer.toString('base64');
             const dataUrl = `data:${req.file.mimetype};base64,${base64Image}`;
             issueData.imageUrl = dataUrl;
         }
+
+        console.log('Issue data:', issueData);
 
         const issue = await Issue.create(issueData);
         

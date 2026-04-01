@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const { 
     createIssue, 
     getAllIssues, 
@@ -11,9 +12,11 @@ const {
     addComment
 } = require('../controllers/issueController');
 const { protect } = require('../middleware/auth');
-const upload = require('../middleware/upload');
 
 const router = express.Router();
+
+// Optional upload middleware
+const uploadOptional = multer().single('image');
 
 // Public routes
 router.get('/', getAllIssues);
@@ -21,7 +24,7 @@ router.get('/:id', getIssueById);
 
 // Protected routes
 router.get('/user/my-issues', protect, getMyIssues);
-router.post('/', protect, upload.single('image'), createIssue); 
+router.post('/', protect, uploadOptional, createIssue); 
 router.patch('/:id/status', protect, updateIssueStatus); 
 router.delete('/:id', protect, deleteIssue);
 router.post('/:id/upvote', protect, upvoteIssue);
