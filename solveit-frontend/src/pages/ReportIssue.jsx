@@ -188,6 +188,8 @@ const ReportIssue = () => {
       toast.success('Sorun bildiriminiz başarıyla oluşturuldu!');
       navigate('/');
     } catch (error) {
+      console.error("GİZLİ HATA YAKALANDI:", error); 
+      
       const errorMessage = error.response?.data?.message || 'Sorun bildirilirken hata oluştu';
       toast.error(errorMessage);
     } finally {
