@@ -179,7 +179,11 @@ const ReportIssue = () => {
         formDataToSend.append('image', formData.image);
       }
       
-      const response = await api.post('/issues', formDataToSend);
+      const response = await api.post('/issues', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       
       toast.success('Sorun bildiriminiz başarıyla oluşturuldu!');
       navigate('/');
