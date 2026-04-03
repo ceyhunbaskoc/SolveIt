@@ -1,8 +1,11 @@
 # Ceyhun Başkoç'un REST API Metotları
 
-**API Test Videosu:** []
+**API Test Videosu:** https://youtu.be/OEhmxA2q4ek
 
 Bu dokümanda, SolveIt (Kampüs ve Şehir Sorun Bildirim Sistemi) projesi için geliştirilen 10 temel fonksiyonel gereksinimin RESTful API uç noktaları, istek (request) ve yanıt (response) yapıları detaylandırılmıştır.
+
+> ⚠️ **ÖNEMLİ UYARI / DİKKAT:** > Projenin Frontend kısmı **Vercel**'de, Backend kısmı ise **Render**'da canlı olarak çalışmaktadır.
+> Render'ın ücretsiz versiyonu kullanıldığı için, siteye ilk girişinizde backend'in uyanması **30-40 saniye sürebilir**. Lütfen ilk istekte biraz bekleyiniz.
 
 **Production URL:** `https://solveit-887w.onrender.com/api`
 

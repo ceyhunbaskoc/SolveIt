@@ -1,7 +1,10 @@
 # Ceyhun Başkoç'un Web Frontend Görevleri
-**Front-end Test Videosu:** []
+**Front-end Test Videosu:** https://youtu.be/iYPsFxwEyxc
 
 Bu dokümanda, SolveIt (Kampüs ve Şehir Sorun Bildirim Sistemi) projesi için geliştirilen 10 temel frontend görevi, React bileşenleri ve kullanıcı deneyimi detaylandırılmıştır.
+
+> ⚠️ **ÖNEMLİ UYARI / DİKKAT:** > Projenin Frontend kısmı **Vercel**'de, Backend kısmı ise **Render**'da canlı olarak çalışmaktadır.
+> Render'ın ücretsiz versiyonu kullanıldığı için, siteye ilk girişinizde backend'in uyanması **30-40 saniye sürebilir**. Lütfen ilk istekte biraz bekleyiniz.
 
 **Frontend URL:** `https://solveit-frontend.vercel.app`
 

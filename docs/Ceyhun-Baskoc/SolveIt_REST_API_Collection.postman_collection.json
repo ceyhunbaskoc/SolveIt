@@ -1,0 +1,309 @@
+{
+  "info": {
+    "_postman_id": "e45f8be1-6bc6-4aa7-a32f-62bcddc75bc6",
+    "name": "SolveIt REST API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53686995",
+    "_collection_link": "https://go.postman.co/collection/53686995-e45f8be1-6bc6-4aa7-a32f-62bcddc75bc6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create New Admin Account",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Admin\",\r\n  \"email\": \"admin@gmail.com\",\r\n  \"password\": \"454545\",\r\n  \"role\": \"admin\",\r\n  \"department\": \"Admin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/auth/register",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create New Account",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Ceyhun Başkoç2\",\r\n  \"email\": \"ceyhun2@gmail.com\",\r\n  \"password\": \"4532555\",\r\n  \"role\": \"user\",\r\n  \"department\": \"Bilgisayar Mühendisliği\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/auth/register",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login to Account",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"ceyhun@gmail.com\",\r\n  \"password\": \"453255\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/auth/login",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add New Issue",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDAzYTRlNzI2N2Q4Mjg5MThlYWU5MCIsImlhdCI6MTc3NTI1NDA5NCwiZXhwIjoxNzc3ODQ2MDk0fQ.5f5mDHWPIxKMoaC0zNpiX3f-oIPSw8MJ-qxbunaU0vg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"Sorun Başlığı\",\r\n  \"description\": \"Sorunun detaylı açıklaması...\",\r\n  \"category\": \"altyapi\",\r\n  \"location\": {\r\n    \"lat\": 37.8322,\r\n    \"lng\": 30.5260\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/issues",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "issues"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Issue",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDAzYTRlNzI2N2Q4Mjg5MThlYWU5MCIsImlhdCI6MTc3NTI1NDEyNiwiZXhwIjoxNzc3ODQ2MTI2fQ.nNIlUZQnu6rpPHgey__f9P6YI_xgluH85rIARRHh3Ug",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/issues/69d03a4e7267d828918eae90",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "issues",
+            "69d03a4e7267d828918eae90"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Issues",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/issues",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "issues"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Filter by Category",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Show Issue Details",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/issues/69cda0f81100ff56327ad422",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "issues",
+            "69cda0f81100ff56327ad422"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Own Issues",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Update Issue State",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2Q2OGE2OTBhOGE4MmE4YmU1YjQ4YiIsImlhdCI6MTc3NTIyNjA1MCwiZXhwIjoxNzc3ODE4MDUwfQ.sJUgurY5jRF9qeDZfGnYG6w8JGpN1hNwCc2FKYG7OtY",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/issues/69cda0f81100ff56327ad422/status",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "issues",
+            "69cda0f81100ff56327ad422",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Profile Infos",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2Q2OGE2OTBhOGE4MmE4YmU1YjQ4YiIsImlhdCI6MTc3NTIyNjA1MCwiZXhwIjoxNzc3ODE4MDUwfQ.sJUgurY5jRF9qeDZfGnYG6w8JGpN1hNwCc2FKYG7OtY",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Yeni İsim\",\r\n  \"department\": \"Yeni Bölüm\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://solveit-887w.onrender.com/api/users/profile",
+          "protocol": "https",
+          "host": [
+            "solveit-887w",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "users",
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
