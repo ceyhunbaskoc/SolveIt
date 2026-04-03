@@ -135,7 +135,7 @@ const Profile = () => {
     setLoading(true);
     
     try {
-      const response = await api.put(
+      const response = await api.patch(
         '/users/profile',
         {
           name: formData.name,

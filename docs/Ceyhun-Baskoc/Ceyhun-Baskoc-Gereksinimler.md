@@ -37,5 +37,5 @@
    - **Açıklama:** Yanlış açılmış veya mükerrer bir kaydın sistemden kaldırılması. Yalnızca bildirimi açan kullanıcı veya yöneticiler silebilir.
 
 10. **Profil Bilgilerini Güncelleme**
-    - **API Metodu:** `PUT /api/users/profile`
+    - **API Metodu:** `PATCH /api/users/profile`
     - **Açıklama:** Kullanıcının ad, e-posta veya şifre gibi temel profil bilgilerini değiştirebilmesi. Yalnızca kendi bilgilerini güncelleyebilir.
