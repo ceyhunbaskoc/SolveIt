@@ -1,42 +1,395 @@
 # Ceyhun Başkoç'un Web Frontend Görevleri
 **Front-end Test Videosu:** []
 
-## 1. Kullanıcı Hesap Oluşturma Sayfası
-- **UI Bileşenleri:** Kayıt formu (HTML5 input).
-- **İşlev:** POST isteği ile form verisini backend'e yollama.
+Bu dokümanda, SolveIt (Kampüs ve Şehir Sorun Bildirim Sistemi) projesi için geliştirilen 10 temel frontend görevi, React bileşenleri ve kullanıcı deneyimi detaylandırılmıştır.
 
-## 2. Kullanıcı Girişi Sayfası
-- **UI Bileşenleri:** E-posta ve şifre inputları.
-- **İşlev:** Giriş sonrası gelen Token'ı `localStorage`'a kaydetme.
+**Frontend URL:** `https://solveit-frontend.vercel.app`
 
-## 3. Yeni Sorun Bildirimi Formu (Ana Sayfa Yan Panel)
-- **UI Bileşenleri:** Başlık (input), Kategori (select), Açıklama (textarea).
-- **İşlev:** PreventDefault ile sayfa yenilenmesini durdurup fetch POST atılması.
+## 1. Kullanıcı Hesap Oluşturma Sayfası (Register.jsx)
+- **API Endpoint:** `POST /api/auth/register`
+- **Görev:** Kullanıcı kayıt işlemi için web sayfası tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Responsive kayıt formu (desktop ve mobile uyumlu)
+  - Ad input alanı (placeholder="Adınız Soyadınız", autoComplete="name")
+  - Email input alanı (type="email", autoComplete="email")
+  - Şifre input alanı (type="password", visibility toggle)
+  - Departman input alanı (placeholder="Bilgisayar Mühendisliği")
+  - "Kayıt Ol" butonu (primary button, loading state)
+  - "Zaten hesabınız var mı? Giriş Yap" linki
+  - Loading spinner (kayıt işlemi sırasında)
+  - Toast notification (react-hot-toast)
+- **Form Validasyonu:**
+  - HTML5 form validation (required attributes)
+  - JavaScript real-time validation
+  - Email format kontrolü (regex pattern)
+  - Minimum 3 karakter ad kontrolü
+  - Client-side ve server-side validation
+  - Error state management
+- **Kullanıcı Deneyimi:**
+  - Form hatalarını input altında gösterilmesi
+  - Başarılı kayıt sonrası success notification ve otomatik giriş
+  - Hata durumlarında kullanıcı dostu mesajlar
+  - Form submission prevention (double-click koruması)
+  - Accessible form labels ve ARIA attributes
+  - Keyboard navigation desteği
+- **Teknik Detaylar:**
+  - Framework: React 18 with hooks
+  - State management (useState, useEffect)
+  - Axios instance for API calls
+  - React Router for navigation
+  - TailwindCSS for styling
+  - react-hot-toast for notifications
 
-## 4. Tüm Bildirimleri Listeleme Dashboard'u
-- **UI Bileşenleri:** Bootstrap Card yapıları. Listeyi render eden JavaScript döngüsü.
-- **İşlev:** DOM manipülasyonu ile `innerHTML` kullanarak sorunları ekrana basma.
+## 2. Kullanıcı Girişi Sayfası (Login.jsx)
+- **API Endpoint:** `POST /api/auth/login`
+- **Görev:** Kullanıcı giriş işlemi için web sayfası tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Responsive login formu (centered layout)
+  - Email input alanı (type="email", autoComplete="email")
+  - Şifre input alanı (type="password", visibility toggle)
+  - "Giriş Yap" butonu (primary button, loading state)
+  - "Hesabınız yok mu? Kayıt Ol" linki
+  - Loading spinner (giriş işlemi sırasında)
+  - Error message display (invalid credentials)
+- **Form Validasyonu:**
+  - Email format kontrolü
+  - Şifre boş olamaz kontrolü
+  - Real-time validation feedback
+  - Server-side error handling
+- **Kullanıcı Deneyimi:**
+  - Başarılı girişte otomatik ana sayfaya yönlendirme
+  - JWT token localStorage'a kaydetme
+  - AuthContext state güncelleme
+  - Hata durumunda error notification
+  - Remember me functionality
+  - Auto-logout on token expiration
+- **Teknik Detaylar:**
+  - AuthContext for global state management
+  - Protected routes implementation
+  - Token refresh mechanism
+  - Axios interceptors for auth headers
+  - Session management
 
-## 5. Kategori Filtreleme Arayüzü
-- **UI Bileşenleri:** Yan tarafta filtreleme linkleri veya butonları.
-- **İşlev:** Tıklanan butona göre API URL'sini değiştirip yeniden veri çekme.
+## 3. Yeni Sorun Bildirimi Formu (ReportIssue.jsx)
+- **API Endpoint:** `POST /api/issues`
+- **Görev:** Kullanıcıların sorun bildirmesi için form tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Responsive sorun bildirim formu
+  - Başlık input alanı (required, placeholder)
+  - Açıklama textarea alanı (required, resizable)
+  - Kategori dropdown (altyapi, temizlik, güvenlik, vb.)
+  - Konum seçimi (Leaflet harita integration)
+  - Fotoğraf upload alanı (drag & drop, preview)
+  - "Sorun Bildir" butonu (primary button)
+  - Loading state (upload sırasında)
+  - Progress indicator (fotoğraf upload için)
+- **Form Validasyonu:**
+  - Başlık minimum/maximum karakter kontrolü
+  - Açıklama boş olamaz kontrolü
+  - Kategori seçimi zorunlu
+  - Konum seçimi zorunlu
+  - Fotoğraf format ve boyut kontrolü
+  - Real-time validation feedback
+- **Kullanıcı Deneyimi:**
+  - Interactive map for location selection
+  - Image preview before upload
+  - Form auto-save (localStorage draft)
+  - Success notification ve ana sayfaya yönlendirme
+  - Error handling (upload failures)
+  - Optimistic updates
+- **Teknik Detaylar:**
+  - Leaflet map integration
+  - File upload with FormData
+  - Base64 image encoding
+  - Geolocation API (opsiyonel)
+  - Form persistence
+  - Error boundary implementation
 
-## 6. Bildirim Detayı Modal/Sayfası
-- **UI Bileşenleri:** Bootstrap Modal.
-- **İşlev:** "Detaylar" butonuna basıldığında o sorunun içeriğini modal içine doldurma.
+## 4. Tüm Bildirimleri Listeleme Dashboard'u (Dashboard.jsx)
+- **API Endpoint:** `GET /api/issues`
+- **Görev:** Tüm sorunları listeleyen dashboard tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Responsive grid layout (3 columns desktop, 1 mobile)
+  - Sorun kartları (card component)
+  - Fotoğraf gösterimi (thumbnail)
+  - Kategori badge'leri
+  - Durum indicator'ları
+  - Konum bilgisi (icon + text)
+  - "Detay Görüntüle" butonları
+  - Upvote/Downvote butonları
+  - Loading skeleton cards
+  - Empty state (hiç sorun yoksa)
+  - Infinite scroll veya pagination
+- **Kullanıcı Deneyimi:**
+  - Smooth transitions ve animations
+  - Card hover effects
+  - Search ve filter integration
+  - Real-time updates (Socket.io)
+  - Lazy loading for images
+  - Responsive design
+  - Keyboard navigation
+- **Teknik Detaylar:**
+  - React hooks (useState, useEffect, useMemo)
+  - Axios for API calls
+  - Socket.io integration
+  - Virtual scrolling (large lists)
+  - Image optimization
+  - Caching strategies
+  - Error boundaries
 
-## 7. Kişisel Bildirimlerim Paneli
-- **UI Bileşenleri:** "Benim Bildirimlerim" sekmesi.
-- **İşlev:** Auth token gönderilerek `my-issues` rotasından verilerin çekilip gösterilmesi.
+## 5. Kategori Filtreleme Arayüzü (Dashboard.jsx)
+- **API Endpoint:** `GET /api/issues?category={category}`
+- **Görev:** Sorunları kategoriye göre filtreleme arayüzü
+- **UI Bileşenleri:**
+  - Kategori filtreleme sidebar (sticky positioning)
+  - Kategori butonları (active state)
+  - "Tümü" filtresi (reset option)
+  - Badge sayıları (her kategorideki sorun sayısı)
+  - Clear filters butonu
+  - Mobile filter drawer (hamburger menu)
+  - Active filter indicators
+- **Kullanıcı Deneyimi:**
+  - Instant filter results
+  - Active filter highlighting
+  - Filter persistence (URL query params)
+  - Smooth transitions
+  - Mobile-friendly filter UI
+  - Keyboard accessible filters
+  - Filter count badges
+- **Teknik Detaylar:**
+  - URL query parameter management
+  - Debounced API calls
+  - Component state management
+  - Responsive design patterns
+  - Accessibility features
+  - Performance optimization
+
+## 6. Bildirim Detayı Sayfası (IssueDetail.jsx)
+- **API Endpoint:** `GET /api/issues/{id}`
+- **Görev:** Tekil sorun detaylarını gösteren sayfa tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Responsive detail layout
+  - Sorun başlığı (H1 heading)
+  - Fotoğraf galerisi (fullscreen modal ile)
+  - Açıklama metni (formatted)
+  - Kategori ve durum badge'leri
+  - Konum haritası (Leaflet integration)
+  - Upvote/Downvote butonları
+  - Yorumlar bölümü (threaded comments)
+  - Yorum ekleme formu
+  - "Düzenle" ve "Sil" butonları (sahibi için)
+  - Durum güncelleme butonları (admin ve sahibi için)
+- **Kullanıcı Deneyimi:**
+  - Image gallery with zoom functionality
+  - Interactive map for location
+  - Real-time comment updates
+  - Vote animations
+  - Share functionality
+  - Print-friendly layout
+  - Breadcrumb navigation
+- **Teknik Detaylar:**
+  - React Router params handling
+  - Socket.io for real-time updates
+  - Image gallery component
+  - Comment threading logic
+  - Vote state management
+  - Share API integration
+  - Print CSS styles
+
+## 7. Kişisel Bildirimlerim Paneli (MyIssues.jsx)
+- **API Endpoint:** `GET /api/issues/user/my-issues`
+- **Görev:** Kullanıcının kendi sorunlarını gösteren panel tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Personal dashboard layout
+  - Sorun kartları (ownership indicators)
+  - Durum göstergeleri (PENDING, IN_PROGRESS, RESOLVED)
+  - "Düzenle" ve "Sil" butonları
+  - Fotoğraf thumbnail'ları
+  - XP kazanım göstergesi
+  - Statistics cards (toplam sorun, çözülenler)
+  - Filter options (status bazlı)
+  - Empty state (hiç sorun yoksa)
+- **Kullanıcı Deneyimi:**
+  - Ownership visual indicators
+  - Quick action buttons
+  - Status color coding
+  - Progress tracking
+  - Sort options (tarih, durum)
+  - Bulk actions (toplu işlemler)
+  - Export functionality
+- **Teknik Detaylar:**
+  - Protected route implementation
+  - User-specific data fetching
+  - State management for personal issues
+  - Permission-based UI rendering
+  - Data synchronization
+  - Error handling
 
 ## 8. Durum Güncelleme Butonları (Admin UI)
-- **UI Bileşenleri:** Kartların üzerindeki "Çözüldü İşaretle" butonları.
-- **İşlev:** Tıklandığında statüyü değiştiren PATCH isteği.
+- **API Endpoint:** `PATCH /api/issues/{id}/status`
+- **Görev:** Yetkili kullanıcıların sorun durumunu güncellemesi için arayüz
+- **UI Bileşenleri:**
+  - Status dropdown (select component)
+  - "Durumu Güncelle" butonu (admin only)
+  - Confirmation dialog (destructive action için)
+  - Status history timeline
+  - XP award indicator (çözüldüğünde)
+  - Bulk status update (toplu işlemler)
+  - Status change notifications
+- **Kullanıcı Deneyimi:**
+  - Admin permission checks
+  - Confirmation before status change
+  - Real-time status updates
+  - XP calculation display
+  - Status change history
+  - Undo functionality (opsiyonel)
+  - Audit trail visibility
+- **Teknik Detaylar:**
+  - Role-based access control
+  - Permission checking
+  - Socket.io notifications
+  - XP calculation logic
+  - Audit logging
+  - State management
+  - Error handling
 
 ## 9. Bildirim Silme Arayüzü
-- **UI Bileşenleri:** Kırmızı çöp kutusu butonu ve `window.confirm` onay kutusu.
-- **İşlev:** DELETE isteği sonrası listeden ilgili HTML elementinin (kartın) anında silinmesi.
+- **API Endpoint:** `DELETE /api/issues/{id}`
+- **Görev:** Sorun silme işlemi için kullanıcı arayüzü
+- **UI Bileşenleri:**
+  - "Sil" butonu (danger button style)
+  - Confirmation modal dialog
+  - Warning messages ve icons
+  - "Emin misiniz?" checkbox confirmation
+  - Loading state (silme işlemi sırasında)
+  - Success/error notifications
+  - Undo option (opsiyonel)
+- **Kullanıcı Deneyimi:**
+  - Double confirmation mechanism
+  - Visual warning indicators
+  - Clear warning messages
+  - Graceful error handling
+  - Optimistic updates
+  - Accessibility features
+  - Mobile-friendly dialogs
+- **Teknik Detaylar:**
+  - Modal component implementation
+  - Confirmation state management
+  - Permission checking
+  - Error boundary implementation
+  - State synchronization
+  - Cleanup operations
+  - Navigation handling
 
-## 10. Profil Düzenleme Sayfası
-- **UI Bileşenleri:** Profil ayarları formu.
-- **İşlev:** Mevcut verinin inputlara doldurulması ve PUT isteğiyle güncellenmesi.
+## 10. Profil Düzenleme Sayfası (Profile.jsx)
+- **API Endpoint:** `PATCH /api/users/profile`
+- **Görev:** Kullanıcı profil bilgilerini düzenleme sayfası tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Responsive profil formu
+  - Ad input alanı (mevcut değerle dolu)
+  - Email input alanı (readonly veya düzenlenebilir)
+  - Departman input alanı
+  - İletişim bilgileri textarea
+  - XP ve seviye göstergesi
+  - Progress bar (seviye atlaması için)
+  - "Değişiklikleri Kaydet" butonu
+  - "İptal" butonu
+  - Loading state
+  - Success/error notifications
+- **Form Validasyonu:**
+  - Real-time validation
+  - Email format kontrolü
+  - Minimum karakter kontrolü
+  - Unsaved changes warning
+  - Form dirty state tracking
+  - Client-side ve server-side validation
+- **Kullanıcı Deneyimi:**
+  - Current values display
+  - XP gamification elements
+  - Level progression visualization
+  - Unsaved changes indicator
+  - Auto-save functionality
+  - Profile completion status
+  - Success feedback
+- **Teknik Detaylar:**
+  - Form state management
+  - Validation logic
+  - XP calculation system
+  - Level progression algorithm
+  - API integration
+  - Error handling
+  - State persistence
+
+## 11. Lider Tablosu Sayfası (Leaderboard.jsx)
+- **API Endpoint:** `GET /api/users/leaderboard`
+- **Görev:** En yüksek XP'ye sahip kullanıcıları gösteren leaderboard tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Responsive leaderboard layout (desktop: table, mobile: cards)
+  - Sıralama göstergesi (1, 2, 3... rank badges)
+  - Kullanıcı avatarları (initials veya fotoğraf)
+  - Kullanıcı isimleri (bold text)
+  - XP puanları (highlighted numbers)
+  - Seviye badge'leri (Duyarlı Vatandaş, Aktif Gözlemci, Şehir Kahramanı)
+  - Seviye ikonları (🌱, 👁️, 🏆)
+  - Progress bar'lar (sonraki seviyeye ne kadar kaldığı)
+  - "Benim Konumum" highlight (mevcut kullanıcı vurgulanmış)
+  - Yenileme butonu (real-time updates için)
+  - Loading skeleton rows (veri yüklenirken)
+  - Empty state (hiç kullanıcı yoksa)
+- **Kullanıcı Deneyimi:**
+  - Animated rank changes (sıralama değiştiğinde)
+  - Smooth transitions ve hover effects
+  - Color-coded level system
+  - Mobile-friendly card view
+  - Infinite scroll veya pagination (çok kullanıcı için)
+  - Search functionality (kullanıcı arama)
+  - Filter options (seviye bazlı)
+  - Share functionality (leaderboard paylaşımı)
+  - Real-time updates (Socket.io ile)
+- **Teknik Detaylar:**
+  - React hooks (useState, useEffect, useMemo)
+  - WebSocket integration (real-time updates)
+  - Virtual scrolling (large lists için)
+  - Debounced search (performans için)
+  - LocalStorage caching (offline support)
+  - Responsive design patterns
+  - Accessibility features (WCAG 2.1 AA)
+  - Performance optimization
+  - Error boundaries
+  - State management (global leaderboard state)
+
+---
+
+## 📋 **Teknoloji Stack'i**
+
+### **Frontend Framework:**
+- React 18 with hooks
+- React Router v6
+- TailwindCSS for styling
+- Axios for API calls
+- react-hot-toast for notifications
+- Leaflet for maps
+- Socket.io-client for real-time
+
+### **UI/UX Features:**
+- Responsive design (mobile-first)
+- Dark theme implementation
+- Loading states and skeletons
+- Error boundaries
+- Accessibility (WCAG 2.1 AA)
+- Progressive enhancement
+- Performance optimization
+
+### **State Management:**
+- React Context API (AuthContext)
+- Local state with useState
+- LocalStorage for persistence
+- Session management
+- Real-time synchronization
+
+### **Integration Points:**
+- Backend API integration
+- Socket.io real-time updates
+- Image upload and processing
+- Geolocation services
+- Social sharing features
