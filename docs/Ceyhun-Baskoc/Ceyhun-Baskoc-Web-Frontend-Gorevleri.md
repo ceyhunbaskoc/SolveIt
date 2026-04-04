@@ -361,6 +361,84 @@ Bu dokümanda, SolveIt (Kampüs ve Şehir Sorun Bildirim Sistemi) projesi için 
   - Error boundaries
   - State management (global leaderboard state)
 
+## 12. Harita Sayfası (MapPage.jsx)
+- **API Endpoint:** `GET /api/issues` (tüm sorunları haritada göstermek için)
+- **Görev:** Tüm sorunları interaktif harita üzerinde gösteren sayfa tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Full-screen harita container (responsive)
+  - Leaflet map component (Stadia Maps veya OpenStreetMap)
+  - Marker cluster (çok sayıda sorun için gruplama)
+  - Kategori bazlı marker ikonları (farklı renkler ve semboller)
+  - Sidebar filter paneli (kategori filtreleme)
+  - Search box (konum veya sorun adına göre arama)
+  - Legend (kategori renklerini gösteren açıklama)
+  - Zoom controls (+/- butonları)
+  - Current location button (kullanıcının konumuna git)
+  - Layer toggle (farklı harita katmanları)
+  - Loading overlay (harita yüklenirken)
+  - Error state (harita yüklenemezse)
+- **Kullanıcı Deneyimi:**
+  - Interactive markers (tıklandığında sorun detayı popup)
+  - Smooth zoom ve pan animasyonları
+  - Real-time marker updates (yeni sorunlar)
+  - Heat map view (yoğunluk gösterimi)
+  - Drawing tools (çizim araçları)
+  - Route planning (rota planlama)
+  - Offline map support (çevrimdışı harita)
+  - Mobile touch gestures (dokunmatik kontrol)
+- **Teknik Detaylar:**
+  - Leaflet.js integration
+  - Geolocation API
+  - Marker clustering (Leaflet.markercluster)
+  - Custom marker icons
+  - Real-time WebSocket updates
+  - Map tile caching
+  - Performance optimization (virtual rendering)
+  - Mobile responsive design
+  - Accessibility (keyboard navigation)
+  - Error boundary implementation
+
+## 13. Admin Paneli Sayfası (AdminPanel.jsx)
+- **API Endpoint:** `GET /api/issues` (tüm sorunlar), `GET /api/users` (tüm kullanıcılar)
+- **Görev:** Yönetici paneli için admin arayüzü tasarımı ve implementasyonu
+- **UI Bileşenleri:**
+  - Admin dashboard layout (sidebar + content)
+  - Statistics cards (toplam sorun, çözülenler, kullanıcı sayısı)
+  - Issues management table (tüm sorunların listesi)
+  - Users management table (tüm kullanıcıların listesi)
+  - Bulk action tools (toplu durum güncelleme)
+  - Advanced filters (tarih aralığı, kategori, durum)
+  - Export functionality (Excel, CSV export)
+  - System health monitor (server status, database info)
+  - Activity log (son işlemlerin listesi)
+  - User role management (rol değiştirme)
+  - Issue priority settings (öncelik belirleme)
+  - Analytics dashboard (grafikler ve istatistikler)
+  - Settings paneli (sistem ayarları)
+- **Kullanıcı Deneyimi:**
+  - Admin-only access control
+  - Real-time dashboard updates
+  - Drag-and-drop table reordering
+  - Quick action buttons
+  - Confirmation dialogs (destructive actions)
+  - Search ve filter integration
+  - Data visualization (charts, graphs)
+  - Print-friendly reports
+  - Mobile admin interface
+  - Keyboard shortcuts
+- **Teknik Detaylar:**
+  - Role-based access control (RBAC)
+  - Protected routes implementation
+  - Advanced filtering logic
+  - Data export functionality
+  - Real-time WebSocket updates
+  - Chart.js veya Recharts integration
+  - Table virtualization (large datasets)
+  - Audit logging system
+  - Performance monitoring
+  - Error handling ve recovery
+  - State management (admin state)
+
 ---
 
 ## 📋 **Teknoloji Stack'i**
