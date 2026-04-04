@@ -1,6 +1,6 @@
 # Ceyhun Başkoç'un REST API Metotları
 
-**API Test Videosu:** https://youtu.be/OEhmxA2q4ek
+**API Test Videosu:** https://youtu.be/hMIVZo71PZ8
 
 Bu dokümanda, SolveIt (Kampüs ve Şehir Sorun Bildirim Sistemi) projesi için geliştirilen 10 temel fonksiyonel gereksinimin RESTful API uç noktaları, istek (request) ve yanıt (response) yapıları detaylandırılmıştır.
 
