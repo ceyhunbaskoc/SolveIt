@@ -20,6 +20,7 @@ function connect() {
 }
 
 function getClient() {
+    if (!redis || redis.status === 'end' || redis.status === 'close') return null;
     return redis;
 }
 

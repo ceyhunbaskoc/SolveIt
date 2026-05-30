@@ -6,10 +6,14 @@ const { getClient } = require('../utils/redis');
 const CACHE_TTL = 60; // saniye
 
 async function invalidateIssuesCache() {
-    const client = getClient();
-    if (!client) return;
-    const keys = await client.keys('issues:*');
-    if (keys.length > 0) await client.del(...keys);
+    try {
+        const client = getClient();
+        if (!client) return;
+        const keys = await client.keys('issues:*');
+        if (keys.length > 0) await client.del(...keys);
+    } catch (err) {
+        console.warn('[REDIS] Cache invalidation skipped:', err.message);
+    }
 }
 
 
@@ -134,11 +138,15 @@ exports.getAllIssues = async (req, res) => {
         const client = getClient();
 
         if (client) {
-            const cached = await client.get(cacheKey);
-            if (cached) {
-                console.log('[REDIS] Cache hit:', cacheKey);
-                const data = JSON.parse(cached);
-                return res.status(200).json({ success: true, count: data.length, data, fromCache: true });
+            try {
+                const cached = await client.get(cacheKey);
+                if (cached) {
+                    console.log('[REDIS] Cache hit:', cacheKey);
+                    const data = JSON.parse(cached);
+                    return res.status(200).json({ success: true, count: data.length, data, fromCache: true });
+                }
+            } catch (err) {
+                console.warn('[REDIS] Cache get skipped:', err.message);
             }
         }
 
@@ -148,8 +156,12 @@ exports.getAllIssues = async (req, res) => {
         const issues = await Issue.find(query).populate('reporterId', 'name email').sort({ createdAt: -1 });
 
         if (client) {
-            await client.setex(cacheKey, CACHE_TTL, JSON.stringify(issues));
-            console.log('[REDIS] Cache set:', cacheKey, `(TTL: ${CACHE_TTL}s)`);
+            try {
+                await client.setex(cacheKey, CACHE_TTL, JSON.stringify(issues));
+                console.log('[REDIS] Cache set:', cacheKey, `(TTL: ${CACHE_TTL}s)`);
+            } catch (err) {
+                console.warn('[REDIS] Cache set skipped:', err.message);
+            }
         }
 
         res.status(200).json({ success: true, count: issues.length, data: issues });
