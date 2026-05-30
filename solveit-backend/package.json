@@ -4,17 +4,20 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "node --check index.js && node --check src/controllers/issueController.js && node --check src/utils/rabbitmq.js && node --check src/utils/redis.js && echo 'Syntax check passed'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "amqplib": "^2.0.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "ioredis": "^5.11.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.4",
     "multer": "^2.1.1",

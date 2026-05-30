@@ -12,6 +12,9 @@ const authRoutes = require('./src/routes/authRoutes');
 const issueRoutes = require('./src/routes/issueRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 const cleanupOldIssues = require('./src/utils/cleanupOldIssues');
+const { connect: connectRabbitMQ } = require('./src/utils/rabbitmq');
+const { startConsumer } = require('./src/workers/notificationConsumer');
+const { connect: connectRedis } = require('./src/utils/redis');
 
 const app = express();
 
@@ -61,10 +64,14 @@ cron.schedule('0 0 * * *', () => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
     console.log('[CRON] Scheduled cleanup: Daily at 00:00 (midnight)');
     console.log('[SOCKET] Socket.io server initialized');
+
+    connectRedis();
+    await connectRabbitMQ();
+    await startConsumer();
 });
 
 // Socket connection handling

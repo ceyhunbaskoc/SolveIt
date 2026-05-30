@@ -1,27 +1,17 @@
 const Issue = require('../models/Issue');
 const User = require('../models/User');
+const { publishMessage } = require('../utils/rabbitmq');
+const { getClient } = require('../utils/redis');
 
-// GET: List all issues
-exports.getAllIssues = async (req, res) => {
-    try {
-        console.log("[INFO] Fetching all issues from the database...");
-        
-        const issues = await Issue.find().sort({ createdAt: -1 }); 
-        
-        res.status(200).json({ 
-            success: true, 
-            count: issues.length, 
-            data: issues 
-        });
-    } catch (error) {
-        console.error("[ERROR] Failed to fetch issues:", error.message);
-        res.status(500).json({ 
-            success: false, 
-            message: "Server Error", 
-            error: error.message 
-        });
-    }
-};
+const CACHE_TTL = 60; // saniye
+
+async function invalidateIssuesCache() {
+    const client = getClient();
+    if (!client) return;
+    const keys = await client.keys('issues:*');
+    if (keys.length > 0) await client.del(...keys);
+}
+
 
 // POST: Create New Issue
 exports.createIssue = async (req, res) => {
@@ -53,10 +43,27 @@ exports.createIssue = async (req, res) => {
         console.log('Issue data:', issueData);
 
         const issue = await Issue.create(issueData);
-        
+
         // Kullanıcıya +10 XP ekle
-        await User.findByIdAndUpdate(req.user._id, { $inc: { xp: 10 } });
-        
+        const reporter = await User.findByIdAndUpdate(
+            req.user._id,
+            { $inc: { xp: 10 } },
+            { new: true }
+        );
+
+        // RabbitMQ: Yeni sorun kuyruğa gönder
+        await publishMessage({
+            event: 'NEW_ISSUE',
+            issueId: issue._id.toString(),
+            title: issue.title,
+            category: issue.category,
+            location: issue.location,
+            reporterName: reporter?.name || 'Bilinmiyor',
+            createdAt: issue.createdAt,
+        });
+
+        await invalidateIssuesCache();
+
         res.status(201).json({ success: true, data: issue });
     } catch (error) {
         console.error('Create issue error:', error);
@@ -100,17 +107,19 @@ exports.updateIssueStatus = async (req, res) => {
         // 5. Kaydettikten sonra populate edip Frontend'e gönder
         const updatedIssue = await Issue.findById(req.params.id).populate('reporterId', 'name email');
         
+        await invalidateIssuesCache();
+
         // Socket.io ile bildirim gönder
         const io = req.app.get('socketio');
         if (io) {
-            io.emit('statusUpdated', { 
-                issueId: issue._id, 
-                status: status, 
+            io.emit('statusUpdated', {
+                issueId: issue._id,
+                status: status,
                 reporterId: issue.reporterId._id,
-                message: `Sorununuzun durumu "${status === 'RESOLVED' ? 'Çözüldü' : status === 'IN_PROGRESS' ? 'İnceleniyor' : 'Beklemede'}" olarak güncellendi!` 
+                message: `Sorununuzun durumu "${status === 'RESOLVED' ? 'Çözüldü' : status === 'IN_PROGRESS' ? 'İnceleniyor' : 'Beklemede'}" olarak güncellendi!`
             });
         }
-        
+
         res.status(200).json({ success: true, data: updatedIssue });
     } catch (error) {
         console.error('updateIssueStatus error:', error);
@@ -120,18 +129,30 @@ exports.updateIssueStatus = async (req, res) => {
 
 exports.getAllIssues = async (req, res) => {
     try {
-        const query = {};
-        if (req.query.category) {
-            query.category = req.query.category;
+        const category = req.query.category || 'all';
+        const cacheKey = `issues:${category}`;
+        const client = getClient();
+
+        if (client) {
+            const cached = await client.get(cacheKey);
+            if (cached) {
+                console.log('[REDIS] Cache hit:', cacheKey);
+                const data = JSON.parse(cached);
+                return res.status(200).json({ success: true, count: data.length, data, fromCache: true });
+            }
         }
+
+        const query = {};
+        if (req.query.category) query.category = req.query.category;
 
         const issues = await Issue.find(query).populate('reporterId', 'name email').sort({ createdAt: -1 });
 
-        res.status(200).json({
-            success: true,
-            count: issues.length,
-            data: issues
-        });
+        if (client) {
+            await client.setex(cacheKey, CACHE_TTL, JSON.stringify(issues));
+            console.log('[REDIS] Cache set:', cacheKey, `(TTL: ${CACHE_TTL}s)`);
+        }
+
+        res.status(200).json({ success: true, count: issues.length, data: issues });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
@@ -185,6 +206,7 @@ exports.deleteIssue = async (req, res) => {
         }
 
         await issue.deleteOne();
+        await invalidateIssuesCache();
         res.status(200).json({ success: true, data: {} });
     } catch (error) {
         console.error('deleteIssue error:', error);
